@@ -1,176 +1,74 @@
-
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import React, { useEffect, useState } from "react";
-import { getSinglePost, updatePost } from "../../../../services/index/posts";
-import { Link, useParams } from "react-router-dom";
-import ArticleDetailSkeleton from "../../../articleDetail/components/ArticleDetailSkeleton";
-import ErrorMessage from "../../../../components/ErrorMessage";
-import parseJsonToHtml from "../../../../utils/parseJsonToHtml";
-import { stables } from "../../../../constants";
-import { HiOutlineCamera } from "react-icons/hi";
-import { toast } from "react-hot-toast";
+import React, { useState } from 'react'
+import axios from 'axios';
 import { useSelector } from "react-redux";
-import Editor from "../../../../components/editor/Editor";
+
 
 const NewPost = () => {
-  const { slug } = useParams();
-  const queryClient = useQueryClient();
   const userState = useSelector((state) => state.user);
-  const [initialPhoto, setInitialPhoto] = useState(null);
-  const [photo, setPhoto] = useState(null);
-  const [body, setBody] = useState(null);
 
-  const { data, isLoading, isError } = useQuery({
-    queryFn: () => getSinglePost({ slug }),
-    queryKey: ["blog", slug],
-  });
+  const [title,setTitle] = useState();
+  const handletitle = (v)=>{
+    setTitle(v.target.value)
+  }
+  const [desc,setDesc] = useState();
+  const handledesc = (v)=>{
+    setDesc(v.target.value)
+  }
+  const handleclear = ()=>{
+    setTitle("");
+    setDesc('');
+  }
+  const handlesubmit =async ()=>{
+    console.log(userState.userInfo.token)
+    try {
+      const url = '/api/posts'; // Replace with your actual URL
+      const token = userState.userInfo.token;
 
-  const {
-    mutate: mutateUpdatePostDetail,
-    isLoading: isLoadingUpdatePostDetail,
-  } = useMutation({
-    mutationFn: ({ updatedData, slug, token }) => {
-      return updatePost({
-        updatedData,
-        slug,
-        token,
-      });
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries(["blog", slug]);
-      toast.success("Post is updated");
-    },
-    onError: (error) => {
-      toast.error(error.message);
-      console.log(error);
-    },
-  });
-
-  useEffect(() => {
-    if (!isLoading && !isError) {
-      setInitialPhoto(data?.photo);
-    }
-  }, [data, isError, isLoading]);
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setPhoto(file);
-  };
-
-  const handleUpdatePost = async () => {
-    let updatedData = new FormData();
-
-    if (!initialPhoto && photo) {
-      updatedData.append("postPicture", photo);
-    } else if (initialPhoto && !photo) {
-      const urlToObject = async (url) => {
-        let reponse = await fetch(url);
-        let blob = await reponse.blob();
-        const file = new File([blob], initialPhoto, { type: blob.type });
-        return file;
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       };
-      const picture = await urlToObject(
-        stables.UPLOAD_FOLDER_BASE_URL + data?.photo
-      );
 
-      updatedData.append("postPicture", picture);
+      const postData = {
+      title:title,
+      desc:desc
+      };
+
+      const response = await axios.post(url, postData, { headers });
+ 
+    } catch (error) {
+    if (error.response && error.response.data.message)
+        throw new Error(error.response.data.message);
+      throw new Error(error.message);
     }
+    
+  }
 
-    updatedData.append("document", JSON.stringify({ body }));
-
-    mutateUpdatePostDetail({
-      updatedData,
-      slug,
-      token: userState.userInfo.token,
-    });
-  };
-
-  const handleDeleteImage = () => {
-    if (window.confirm("Do you want to delete your Post picture?")) {
-      setInitialPhoto(null);
-      setPhoto(null);
-    }
-  };
+  
 
   return (
     <div>
-      {isLoading ? (
-        <ArticleDetailSkeleton />
-      ) : isError ? (
-        <ErrorMessage message="Couldn't fetch the post detail" />
-      ) : (
-        <section className="container mx-auto max-w-5xl flex flex-col px-5 py-5 lg:flex-row lg:gap-x-5 lg:items-start">
-          <article className="flex-1">
-            <label htmlFor="postPicture" className="w-full cursor-pointer">
-              {photo ? (
-                <img
-                  src={URL.createObjectURL(photo)}
-                  alt={data?.title}
-                  className="rounded-xl w-full"
-                />
-              ) : initialPhoto ? (
-                <img
-                  src={stables.UPLOAD_FOLDER_BASE_URL + data?.photo}
-                  alt={data?.title}
-                  className="rounded-xl w-full"
-                />
-              ) : (
-                <div className="w-full min-h-[200px] bg-blue-50/50 flex justify-center items-center">
-                  <HiOutlineCamera className="w-7 h-auto text-primary" />
-                </div>
-              )}
-            </label>
-            <input
-              type="file"
-              className="sr-only"
-              id="postPicture"
-              onChange={handleFileChange}
-            />
-            <button
-              type="button"
-              onClick={handleDeleteImage}
-              className="w-fit bg-red-500 text-sm text-white font-semibold rounded-lg px-2 py-1 mt-5"
-            >
-              Delete Image
-            </button>
-            <div className="mt-4 flex gap-2">
-              {data?.categories.map((category) => (
-                <Link
-                  to={`/blog?category=${category.name}`}
-                  className="text-primary text-sm font-roboto inline-block md:text-base"
-                >
-                  {category.name}
-                </Link>
-              ))}
-            </div>
-            <h1 className="text-xl font-medium font-roboto mt-4 text-dark-hard md:text-[26px]">
-              {data?.title}
-            </h1>
-            <div className="w-full">
-              {!isLoading && !isError && (
-                <Editor
-                  content={data?.body}
-                  editable={true}
-                  onDataChange={(data) => {
-                    setBody(data);
-                  }}
-                />
-              )}
-            </div>
-            <button
-              disabled={isLoadingUpdatePostDetail}
-              type="button"
-              onClick={handleUpdatePost}
-              className="w-full bg-green-500 text-white font-semibold rounded-lg px-4 py-2 disabled:cursor-not-allowed disabled:opacity-70"
-            >
-              Update Post
-            </button>
-          </article>
-        </section>
-      )}
+      <div class="heading text-center font-bold text-2xl m-5 text-gray-800">New Post</div>
+
+  <div class="editor mx-auto w-10/12 flex flex-col text-gray-800 border border-gray-300 p-4 shadow-lg max-w-2xl">
+    <input value={title} onChange={handletitle} class="title bg-gray-100 border border-gray-300 p-2 mb-4 outline-none" spellcheck="false" placeholder="Title" type="text" />
+    <textarea value={desc} onChange={handledesc} class="description bg-gray-100 sec p-3 h-60 border border-gray-300 outline-none" spellcheck="false" placeholder="Describe everything about this post here"></textarea>
+    
+
+    <div class="icons flex text-gray-500 m-2">
+      <svg class="mr-2 cursor-pointer hover:text-gray-700 border rounded-full p-1 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+      <svg class="mr-2 cursor-pointer hover:text-gray-700 border rounded-full p-1 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      <svg class="mr-2 cursor-pointer hover:text-gray-700 border rounded-full p-1 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" /></svg>
+      <div class="count ml-auto text-gray-400 text-xs font-semibold">0/300</div>
     </div>
-  );
-};
 
-export default NewPost;
+    <div class="buttons flex">
+      <div onClick={handleclear}  class="btn border border-gray-300 p-1 px-4 font-semibold cursor-pointer text-gray-500 ml-auto">Cancel</div>
+      <div onClick={handlesubmit} class="btn border border-indigo-500 p-1 px-4 font-semibold cursor-pointer text-gray-200 ml-2 bg-indigo-500">Post</div>
+    </div>
+  </div>
+    </div>
+  )
+}
 
+export default NewPost
