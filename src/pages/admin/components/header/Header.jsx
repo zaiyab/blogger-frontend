@@ -17,13 +17,7 @@ const MENU_ITEMS = [
     name: "dashboard",
     type: "link",
   },
-  {
-    title: "Comments",
-    link: "/admin/comments",
-    icon: <FaComments className="text-xl" />,
-    name: "comments",
-    type: "link",
-  },
+
   {
     title: "Posts",
     content: [

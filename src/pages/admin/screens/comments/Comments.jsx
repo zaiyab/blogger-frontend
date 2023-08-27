@@ -47,12 +47,86 @@ const Comments = () => {
 
   }
 
-  const onDelete = (id) => {
+  const onDelete = async (id) => {
+    try {
+      const url = '/api/comments/delcomments'; // Replace with your actual URL
+      const token = userState.userInfo.token;
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      };
+
+      const postData = {
+        id: id,
+      };
+
+      const response = await axios.post(url, postData, { headers });
+      if (response.status === 200) {
+
+        const updatedComments = comments.filter(comment => comment._id !== id);
+
+        setComments(updatedComments);
+        toast.success("Deleted Comment")
+      }
+
+    } catch (error) {
+      toast.error("Something went wrong");
+      if (error.response && error.response.data.message)
+        throw new Error(error.response.data.message);
+
+
+      throw new Error(error.message);
+
+    }
 
 
   }
 
-  const onApprove = (id) => { }
+  const onApprove = async (id, status) => {
+
+    try {
+      const url = '/api/comments/approvecomments'; // Replace with your actual URL
+      const token = userState.userInfo.token;
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      };
+
+      const postData = {
+        id: id,
+        status: status
+
+      };
+
+      const response = await axios.post(url, postData, { headers });
+      if (response.status === 200) {
+        //  setComments(response.data)
+
+        const updatedComments = comments.map(comment => {
+          if (comment._id === id) {
+            return { ...comment, check: status }; // Modify fields as needed
+          }
+          return comment;
+        });
+
+        setComments(updatedComments);
+        toast.success("Updated Comment")
+      }
+
+    } catch (error) {
+      toast.error("Something went wrong");
+      if (error.response && error.response.data.message)
+        throw new Error(error.response.data.message);
+
+
+      throw new Error(error.message);
+
+    }
+
+
+  }
 
 
   useEffect(() => {
@@ -76,7 +150,7 @@ const Comments = () => {
                 Delete
               </button>
               <button
-                onClick={() => onApprove(comment._id)} // Call the onApprove function with the comment ID
+                onClick={() => onApprove(comment._id, comment.check ? false : true)} // Call the onApprove function with the comment ID
                 className={`px-2 py-1 text-sm font-semibold  ${comment.check ? "text-red-600" : "text-green-600"} hover:text-green-800`}
               >
                 {comment.check ? "Disapprove" : "Approve"}
