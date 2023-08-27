@@ -157,7 +157,7 @@ const ManagePosts = () => {
                                   src={
                                     post?.photo
                                       ? stables.UPLOAD_FOLDER_BASE_URL +
-                                        post?.photo
+                                      post?.photo
                                       : images.samplePostImage
                                   }
                                   alt={post.title}
@@ -195,11 +195,11 @@ const ManagePosts = () => {
                           <div className="flex gap-x-2">
                             {post.tags.length > 0
                               ? post.tags.map((tag, index) => (
-                                  <p>
-                                    {tag}
-                                    {post.tags.length - 1 !== index && ","}
-                                  </p>
-                                ))
+                                <p>
+                                  {tag}
+                                  {post.tags.length - 1 !== index && ","}
+                                </p>
+                              ))
                               : "No tags"}
                           </div>
                         </td>
@@ -223,7 +223,15 @@ const ManagePosts = () => {
                           >
                             Edit
                           </Link>
+                          <Link
+                            to={`/admin/comments/${post?._id}`}
+                            className="text-green-600 hover:text-green-900"
+                          >
+                            View Comments
+                          </Link>
+
                         </td>
+
                       </tr>
                     ))
                   )}
