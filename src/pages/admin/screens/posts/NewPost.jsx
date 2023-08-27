@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios';
 import { useSelector } from "react-redux";
+import { toast } from "react-hot-toast";
 
 
 const NewPost = () => {
@@ -19,7 +20,7 @@ const NewPost = () => {
     setDesc('');
   }
   const handlesubmit =async ()=>{
-    console.log(userState.userInfo.token)
+   
     try {
       const url = '/api/posts'; // Replace with your actual URL
       const token = userState.userInfo.token;
@@ -31,11 +32,13 @@ const NewPost = () => {
 
       const postData = {
       title:title,
-      desc:desc
+      caption:desc
       };
 
       const response = await axios.post(url, postData, { headers });
- 
+ if(response){
+  toast.success("Post is updated");
+ }
     } catch (error) {
     if (error.response && error.response.data.message)
         throw new Error(error.response.data.message);
