@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { GrLinkNext, GrLinkPrevious } from "react-icons/gr"
-
+import LoadingBar from 'react-top-loading-bar';
 const Admin = () => {
 
 
@@ -12,6 +12,8 @@ const Admin = () => {
   const [totalPages, setTotalPages] = useState(1); // 
   const userState = useSelector((state) => state.user);
   const [jumpPage, setJumpPage] = useState(currentPage);
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [progress, setProgress] = useState(0)
 
   const [users, setUsers] = useState([
     {
@@ -29,6 +31,7 @@ const Admin = () => {
 
   const getUsers = async () => {
     try {
+      setProgress(20)
       const url = '/api/users/getusers'; // Replace with your actual URL
       const token = userState.userInfo.token;
 
@@ -36,10 +39,11 @@ const Admin = () => {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       };
-
+      setProgress(70)
       const postData = {
         limit: selectedNumber,
         page: currentPage,
+        searchKeyword: searchKeyword,
       };
 
       const response = await axios.post(url, postData, { headers });
@@ -51,7 +55,10 @@ const Admin = () => {
         const totalPageCount = parseInt(response.headers["x-totalpagecount"]);
         setTotalPages(totalPageCount);
       }
+      setProgress(100)
     } catch (error) {
+      setProgress(100)
+
       toast.error("Something went wrong");
       if (error.response && error.response.data.message)
         throw new Error(error.response.data.message);
@@ -66,7 +73,7 @@ const Admin = () => {
 
   const handleDelete = async (id) => {
     try {
-
+      setProgress(20)
       const url = '/api/users/deleteusers'; // Replace with your actual URL
       const token = userState.userInfo.token;
 
@@ -82,15 +89,20 @@ const Admin = () => {
       };
 
       const response = await axios.post(url, postData, { headers });
+      setProgress(70)
+
       if (response.status === 200) {
 
         const updatedUsers = users.filter(user => user._id !== response.data._id);
         setUsers(updatedUsers);
         toast.success("Deleted User")
       }
+      setProgress(100)
 
     } catch (error) {
       toast.error("Something went wrong");
+      setProgress(100)
+
       if (error.response && error.response.data.message)
         throw new Error(error.response.data.message);
 
@@ -104,7 +116,7 @@ const Admin = () => {
 
   const handleVerificationToggle = async (state, id) => {
     try {
-
+      setProgress(20)
       const url = '/api/users/approveusers'; // Replace with your actual URL
       const token = userState.userInfo.token;
 
@@ -120,6 +132,7 @@ const Admin = () => {
       };
 
       const response = await axios.post(url, postData, { headers });
+      setProgress(70)
       if (response.status === 200) {
         //  setComments(response.data)
 
@@ -129,12 +142,14 @@ const Admin = () => {
           }
           return user;
         });
-
+        setProgress(100)
         setUsers(updatedUsers);
         toast.success("Updated User")
       }
 
     } catch (error) {
+      setProgress(100)
+
       toast.error("Something went wrong");
       if (error.response && error.response.data.message)
         throw new Error(error.response.data.message);
@@ -169,115 +184,134 @@ const Admin = () => {
       getUsers();
     }
   };
+  const handleSearchKeywordChange = (event) => {
+    setSearchKeyword(event.target.value)
+  };
 
   useEffect(() => {
     getUsers()
   }, [currentPage])
-  console.log(users)
   return (
-    <div className="text-gray-900 bg-gray-2300">
-      <div className="p-4 flex justify-between">
-        <h1 className="text-3xl">Users</h1>
-        <div className=" justify-end md:flex-col items-center p-4 ">
-          <label className="mb-2 font-semibold mx-2">Select Number of Users per page:</label>
-          <input
-            type="number"
-            className="w-32 p-2 border border-gray-300 rounded mx-2"
-            value={selectedNumber}
-            onChange={handleNumberChange}
-          />
-          <button
-            className=" px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-            onClick={getUsers}
-          >
-            Get
-          </button>
-        </div>
-      </div>
-      <div className="px-3 py-4 flex justify-center flex-col items-center">
-        <table className="w-full text-md bg-white shadow-md rounded mb-4">
-          <tbody>
-            <tr className="border-b">
-              <th className="text-left p-3 px-5">Name</th>
-              <th className="text-left p-3 px-5">Email</th>
-              <th className="text-left p-3 px-5">Role</th>
-              <th className="text-left p-3 px-5">Verified</th> {/* Add this column */}
-              <th></th>
-            </tr>
-            {users.map((user, index) => (
-              <tr key={user._id} className="border-b hover:bg-orange-100 bg-gray-100">
-                <td className="p-3 px-5">
-                  <input type="text" value={user.name} className="bg-transparent" />
-                </td>
-                <td className="p-3 px-5">
-                  <input type="text" value={user.email} className="bg-transparent" />
-                </td>
-                <td className="p-3 px-5">
-                  {user.admin ? <span className='text-green-600 font-roboto'>Admin</span> : <span className='text-red-500 font-roboto'>User</span>}
-                </td>
-                <td className="p-3 px-5">
-                  {user.verified ? (
-                    <button
-                      className="text-green-600"
-                      onClick={() => handleVerificationToggle(false, user._id)}
-                    >
-                      Verified
-                    </button>
-                  ) : (
-                    <button
-                      className="text-red-600"
-                      onClick={() => handleVerificationToggle(true, user._id)}
-                    >
-                      Not Verified
-                    </button>
-                  )}
-                </td>
-                <td className="p-3 px-5 flex justify-end">
-                  {user.admin ? "" : <button
-                    onClick={() => { handleDelete(user._id) }}
-                    type="button"
-                    className="text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline"
-                  >
-                    Delete
-                  </button>}
+    <>
+      <LoadingBar
+        color='#007bff'
+        progress={progress}
+      // onLoaderFinished={() => setProgress(0)}
+      />
+      <div className="text-gray-900 bg-gray-2300">
+        <div className="p-4 flex justify-between">
+          <h1 className="text-3xl">Users</h1>
+          <div className="justify-center md:flex-col items-end p-4 ">
+            <label className="mb-2 font-semibold mx-2">Select Number of Users:</label>
+            <input
+              type="number"
+              className="w-32 p-2 border border-gray-300 rounded mx-2"
+              value={selectedNumber}
+              onChange={handleNumberChange}
+            />
+            <input
+              type="text"
+              placeholder="Search user"
+              className="w-32 p-2 border border-gray-300 rounded mx-2"
+              value={searchKeyword}
+              onChange={handleSearchKeywordChange}
+            />
+            <button
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+              onClick={getUsers}
+            >
+              Get
+            </button>
 
-                </td>
+
+          </div>
+
+        </div>
+        <div className="px-3 py-4 flex justify-center flex-col items-center">
+          <table className="w-full text-md bg-white shadow-md rounded mb-4">
+            <tbody>
+              <tr className="border-b">
+                <th className="text-left p-3 px-5">Name</th>
+                <th className="text-left p-3 px-5">Email</th>
+                <th className="text-left p-3 px-5">Role</th>
+                <th className="text-left p-3 px-5">Verified</th> {/* Add this column */}
+                <th></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="flex items-center mb-3">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage <= 1}
-            className='mx-2'
-          >
-            <GrLinkPrevious />
-          </button>
-          <input
-            type="number"
-            value={jumpPage}
-            onChange={handleJumpPageChange}
-            className="mx-2 w-16 text-center"
-          />
-          <button
-            onClick={handleJumpToPage}
-            className="mx-2 px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-          >
-            Go
-          </button>
-          <span className="mx-2 font-roboto  text-dark-hard" >Page&nbsp;{currentPage}&nbsp;Of&nbsp;{totalPages}</span>
-          <button
+              {users.map((user, index) => (
+                <tr key={user._id} className="border-b hover:bg-orange-100 bg-gray-100">
+                  <td className="p-3 px-5">
+                    <input type="text" value={user.name} className="bg-transparent" />
+                  </td>
+                  <td className="p-3 px-5">
+                    <input type="text" value={user.email} className="bg-transparent" />
+                  </td>
+                  <td className="p-3 px-5">
+                    {user.admin ? <span className='text-green-600 font-roboto'>Admin</span> : <span className='text-red-500 font-roboto'>User</span>}
+                  </td>
+                  <td className="p-3 px-5">
+                    {user.verified ? (
+                      <button
+                        className="text-green-600"
+                        onClick={() => handleVerificationToggle(false, user._id)}
+                      >
+                        Verified
+                      </button>
+                    ) : (
+                      <button
+                        className="text-red-600"
+                        onClick={() => handleVerificationToggle(true, user._id)}
+                      >
+                        Not Verified
+                      </button>
+                    )}
+                  </td>
+                  <td className="p-3 px-5 flex justify-end">
+                    {user.admin ? "" : <button
+                      onClick={() => { handleDelete(user._id) }}
+                      type="button"
+                      className="text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                    >
+                      Delete
+                    </button>}
 
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage >= totalPages}
-          >
-            < GrLinkNext />
-          </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="flex items-center mb-3">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage <= 1}
+              className='mx-2'
+            >
+              <GrLinkPrevious />
+            </button>
+            <input
+              type="number"
+              value={jumpPage}
+              onChange={handleJumpPageChange}
+              className="mx-2 w-16 text-center"
+            />
+            <button
+              onClick={handleJumpToPage}
+              className="mx-2 px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+            >
+              Go
+            </button>
+            <span className="mx-2 font-roboto  text-dark-hard" >Page&nbsp;{currentPage}&nbsp;Of&nbsp;{totalPages}</span>
+            <button
+
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage >= totalPages}
+            >
+              < GrLinkNext />
+            </button>
+          </div>
         </div>
-      </div>
 
-    </div>
+      </div>
+    </>
   );
 };
 
