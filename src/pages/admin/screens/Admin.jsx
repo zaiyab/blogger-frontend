@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
-import {GrLinkNext,GrLinkPrevious} from "react-icons/gr"
- 
+import { GrLinkNext, GrLinkPrevious } from "react-icons/gr"
+
 const Admin = () => {
 
 
@@ -175,7 +175,7 @@ const Admin = () => {
   }, [currentPage])
   console.log(users)
   return (
-    <div className="text-gray-900 bg-gray-200">
+    <div className="text-gray-900 bg-gray-2300">
       <div className="p-4 flex justify-between">
         <h1 className="text-3xl">Users</h1>
         <div className=" justify-end md:flex-col items-center p-4 ">
@@ -200,7 +200,7 @@ const Admin = () => {
             <tr className="border-b">
               <th className="text-left p-3 px-5">Name</th>
               <th className="text-left p-3 px-5">Email</th>
-              <th className="text-left p-3 px-5">admin</th>
+              <th className="text-left p-3 px-5">Role</th>
               <th className="text-left p-3 px-5">Verified</th> {/* Add this column */}
               <th></th>
             </tr>
@@ -247,36 +247,36 @@ const Admin = () => {
           </tbody>
         </table>
         <div className="flex items-center mb-3">
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage <= 1}
-          className='mx-2'
-        >
-        <GrLinkPrevious />
-        </button>
-        <input
-          type="number"
-          value={jumpPage}
-          onChange={handleJumpPageChange}
-          className="mx-2 w-16 text-center"
-        />
-        <button
-          onClick={handleJumpToPage}
-          className="mx-2 px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-        >
-          Go
-        </button>
-        <span className="mx-2 font-roboto  text-dark-hard" >Page&nbsp;{currentPage}&nbsp;Of&nbsp;{totalPages}</span>
-        <button
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage <= 1}
+            className='mx-2'
+          >
+            <GrLinkPrevious />
+          </button>
+          <input
+            type="number"
+            value={jumpPage}
+            onChange={handleJumpPageChange}
+            className="mx-2 w-16 text-center"
+          />
+          <button
+            onClick={handleJumpToPage}
+            className="mx-2 px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+          >
+            Go
+          </button>
+          <span className="mx-2 font-roboto  text-dark-hard" >Page&nbsp;{currentPage}&nbsp;Of&nbsp;{totalPages}</span>
+          <button
 
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage >= totalPages}
-        >
-        < GrLinkNext />
-        </button>
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage >= totalPages}
+          >
+            < GrLinkNext />
+          </button>
+        </div>
       </div>
-      </div>
-   
+
     </div>
   );
 };

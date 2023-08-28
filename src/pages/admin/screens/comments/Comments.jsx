@@ -142,6 +142,8 @@ const Comments = () => {
           <div key={index} className="bg-white p-4 rounded-lg shadow-md">
             <div className="flex items-center mb-2">
               <span className="font-bold mr-2">{comment.username}</span>
+              <span className="font-bold mr-2">{comment.useremail}</span>
+
               <span className="text-gray-500">{comment.createdAt}</span>
               <button
                 onClick={() => onDelete(comment._id)} // Call the onDelete function with the comment ID
