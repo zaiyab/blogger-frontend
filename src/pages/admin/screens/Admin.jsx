@@ -2,10 +2,17 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
-
+import {GrLinkNext,GrLinkPrevious} from "react-icons/gr"
+ 
 const Admin = () => {
-  const [selectedNumber, setSelectedNumber] = useState(20);
+
+
+  const [selectedNumber, setSelectedNumber] = useState(12);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1); // 
   const userState = useSelector((state) => state.user);
+  const [jumpPage, setJumpPage] = useState(currentPage);
+
   const [users, setUsers] = useState([
     {
       "_id": "64ea7517f124591aefb4445f",
@@ -31,17 +38,19 @@ const Admin = () => {
       };
 
       const postData = {
-        limit : 10,
-        page:1
+        limit: selectedNumber,
+        page: currentPage,
       };
 
       const response = await axios.post(url, postData, { headers });
       if (response.status === 200) {
-        setUsers(response.data)
+        setUsers(response.data);
 
-        console.log(response.headers)
+        const totalCount = parseInt(response.headers["x-totalcount"]);
+        const pageSize = parseInt(response.headers["x-pagesize"]);
+        const totalPageCount = parseInt(response.headers["x-totalpagecount"]);
+        setTotalPages(totalPageCount);
       }
-
     } catch (error) {
       toast.error("Something went wrong");
       if (error.response && error.response.data.message)
@@ -53,6 +62,8 @@ const Admin = () => {
     }
 
   }
+
+
   const handleDelete = async (id) => {
     try {
 
@@ -136,24 +147,39 @@ const Admin = () => {
   };
 
 
-  
+
 
   const handleNumberChange = (event) => {
     setSelectedNumber(event.target.value);
   };
 
- 
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    getUsers();
+  };
+  const handleJumpPageChange = (event) => {
+    const newJumpPage = parseInt(event.target.value);
+    setJumpPage(newJumpPage);
+  };
+  const handleJumpToPage = () => {
+    if (jumpPage >= 1 && jumpPage <= totalPages) {
+      setCurrentPage(jumpPage);
+      setJumpPage(jumpPage);
+      getUsers();
+    }
+  };
 
   useEffect(() => {
     getUsers()
-  }, [])
+  }, [currentPage])
   console.log(users)
   return (
     <div className="text-gray-900 bg-gray-200">
       <div className="p-4 flex justify-between">
         <h1 className="text-3xl">Users</h1>
         <div className=" justify-end md:flex-col items-center p-4 ">
-          <label className="mb-2 font-semibold mx-2">Select Number of Users:</label>
+          <label className="mb-2 font-semibold mx-2">Select Number of Users per page:</label>
           <input
             type="number"
             className="w-32 p-2 border border-gray-300 rounded mx-2"
@@ -168,7 +194,7 @@ const Admin = () => {
           </button>
         </div>
       </div>
-      <div className="px-3 py-4 flex justify-center">
+      <div className="px-3 py-4 flex justify-center flex-col items-center">
         <table className="w-full text-md bg-white shadow-md rounded mb-4">
           <tbody>
             <tr className="border-b">
@@ -220,7 +246,37 @@ const Admin = () => {
             ))}
           </tbody>
         </table>
+        <div className="flex items-center mb-3">
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage <= 1}
+          className='mx-2'
+        >
+        <GrLinkPrevious />
+        </button>
+        <input
+          type="number"
+          value={jumpPage}
+          onChange={handleJumpPageChange}
+          className="mx-2 w-16 text-center"
+        />
+        <button
+          onClick={handleJumpToPage}
+          className="mx-2 px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+        >
+          Go
+        </button>
+        <span className="mx-2 font-roboto  text-dark-hard" >Page&nbsp;{currentPage}&nbsp;Of&nbsp;{totalPages}</span>
+        <button
+
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage >= totalPages}
+        >
+        < GrLinkNext />
+        </button>
       </div>
+      </div>
+   
     </div>
   );
 };
