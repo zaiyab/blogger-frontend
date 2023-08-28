@@ -13,7 +13,7 @@ const Comments = () => {
   const [comments, setComments] = useState([])
   const { id } = useParams();
 
-  const getComments = async (e) => {
+  const getComments = async () => {
     try {
 
 
