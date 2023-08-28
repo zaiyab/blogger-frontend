@@ -22,7 +22,7 @@ const ArticlePage = () => {
                 progress={progress}
             // onLoaderFinished={() => setProgress(0)}
             />
-            <div className="flex flex-col items-center ">
+            <div className="flex flex-col items-center  ">
                 <Search search={search} />
                 <Articles searchKeyword={searchKeyword} key={searchKeyword} setProgress={setProgress} />
             </div>
