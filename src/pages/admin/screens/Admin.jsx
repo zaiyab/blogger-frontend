@@ -13,7 +13,6 @@ const Admin = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1); // 
   const userState = useSelector((state) => state.user);
-  const [jumpPage, setJumpPage] = useState(currentPage);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [progress, setProgress] = useState(0)
 
@@ -21,9 +20,9 @@ const Admin = () => {
     {
       "_id": "64ea7517f124591aefb4445f",
       "avatar": "",
-      "name": "zaiyab",
-      "email": "zaiyab@gma5il.com",
-      "password": "$2a$10$6G7z/UlYmiVrqW4drtvFwuHrhUXMNNKYi4qv8z8vBcWpA/x8qqz8y",
+      "name": "Sample",
+      "email": "Sample@gamil.com",
+
       "verified": false,
       "admin": false,
       "createdAt": "2023-08-26T21:56:39.681Z",
@@ -171,21 +170,6 @@ const Admin = () => {
   };
 
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-    getUsers();
-  };
-  const handleJumpPageChange = (event) => {
-    const newJumpPage = parseInt(event.target.value);
-    setJumpPage(newJumpPage);
-  };
-  const handleJumpToPage = () => {
-    if (jumpPage >= 1 && jumpPage <= totalPages) {
-      setCurrentPage(jumpPage);
-      setJumpPage(jumpPage);
-      getUsers();
-    }
-  };
   const handleSearchKeywordChange = (event) => {
     setSearchKeyword(event.target.value)
   };

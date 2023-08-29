@@ -19,7 +19,7 @@ const ArticleDetailPage = () => {
   const { slug } = useParams();
   const userState = useSelector((state) => state.user);
   const [breadCrumbsData, setbreadCrumbsData] = useState([]);
-  const [body, setBody] = useState(null);
+  // const [body, setBody] = useState(null);
 
   const { data, isLoading, isError } = useQuery({
     queryFn: () => getSinglePost({ slug }),
@@ -30,15 +30,13 @@ const ArticleDetailPage = () => {
         { name: "Blog", link: "/articles" },
         { name: data.title, link: `/blog/${data.slug}` },
       ]);
-      setBody(parseJsonToHtml(data?.body));
+      // setBody(parseJsonToHtml(data?.body));
     },
   });
-
   const { data: postsData } = useQuery({
     queryFn: () => getAllPosts(),
     queryKey: ["posts"],
   });
-
   return (
     <MainLayout>
       {isLoading ? (
@@ -75,6 +73,11 @@ const ArticleDetailPage = () => {
               {!isLoading && !isError && (
                 <Editor content={data?.body} editable={false} />
               )}
+
+
+            </div>
+            <div className="w-full">
+              <iframe className="w-full lg:h-[450px] h-[300px]" src="https://www.youtube.com/embed/wdi8_Hv3Lso?si=lKnyfjHTtudjMtPF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
             </div>
             <CommentsContainer
               comments={data?.comments}

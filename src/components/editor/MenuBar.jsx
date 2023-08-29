@@ -23,7 +23,10 @@ const MenuBar = ({ editor }) => {
     if (url) {
       editor.chain().focus().setImage({ src: url }).run()
     }
+
   }, [editor])
+
+
 
   if (!editor) {
     return null;
@@ -31,6 +34,7 @@ const MenuBar = ({ editor }) => {
 
   return (
     <div className="border border-slate-300 rounded-lg p-5 sticky top-3 left-0 right-0 bg-white z-10 flex gap-0.5 flex-wrap">
+
       <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
         className={`editor-btn font-black ${editor.isActive("heading", { level: 1 }) && "active-editor-btn"
