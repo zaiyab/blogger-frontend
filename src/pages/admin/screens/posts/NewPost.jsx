@@ -8,7 +8,7 @@ import LoadingBar from 'react-top-loading-bar';
 const NewPost = () => {
   const userState = useSelector((state) => state.user);
   const [progress, setProgress] = useState(0)
-  const [links, setLinks] = useState([{ title: "", code: '' }, { title: "", code: '' }, { title: "Paste title here", code: 'place code here' }])
+  const [links, setLinks] = useState([{ title: "", code: '' }, { title: "", code: '' }, { title: "", code: '' }])
   const [title, setTitle] = useState();
   const handletitle = (v) => {
     setTitle(v.target.value)
