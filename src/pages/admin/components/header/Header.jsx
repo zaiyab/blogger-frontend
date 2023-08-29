@@ -4,7 +4,7 @@ import { useWindowSize } from "@uidotdev/usehooks";
 import { images } from "../../../../constants";
 import { useEffect, useState } from "react";
 import { AiFillDashboard, AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
-import { FaComments } from "react-icons/fa";
+import { FaUsers } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
 import NavItem from "./NavItem";
 import NavItemCollapse from "./NavItemCollapse";
@@ -17,7 +17,13 @@ const MENU_ITEMS = [
     name: "dashboard",
     type: "link",
   },
-
+  {
+    title: "Users",
+    link: "/admin/users",
+    icon: <FaUsers className="text-xl" />,
+    name: "comments",
+    type: "link",
+  },
   {
     title: "Posts",
     content: [

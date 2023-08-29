@@ -1,62 +1,61 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios';
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import LoadingBar from 'react-top-loading-bar';
-import Pagination from '../../../components/Pagination';
 
 
 const Admin = () => {
-
-
-  const [selectedNumber, setSelectedNumber] = useState(12);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1); // 
   const userState = useSelector((state) => state.user);
-  const [searchKeyword, setSearchKeyword] = useState("");
   const [progress, setProgress] = useState(0)
-
-  const [users, setUsers] = useState([
-    {
-      "_id": "64ea7517f124591aefb4445f",
-      "avatar": "",
-      "name": "Sample",
-      "email": "Sample@gamil.com",
-
-      "verified": false,
-      "admin": false,
-      "createdAt": "2023-08-26T21:56:39.681Z",
-      "updatedAt": "2023-08-26T21:56:39.681Z",
-      "__v": 0
-    },])
-
-  const getUsers = async () => {
+  const [links, setLinks] = useState([{ title: "", code: '' }, { title: "", code: '' }, { title: "Paste title here", code: 'place code here' }])
+  const [title, setTitle] = useState();
+  const handletitle = (v) => {
+    setTitle(v.target.value)
+  }
+  const [desc, setDesc] = useState();
+  const handledesc = (v) => {
+    setDesc(v.target.value)
+  }
+  const handleChange = (index, field, value) => {
+    const newLinks = [...links];
+    newLinks[index][field] = value;
+    setLinks(newLinks);
+  };
+  const handleclear = () => {
+    setTitle("");
+    setDesc('');
+  }
+  const handlesubmit = async (e) => {
+    e.preventDefault();
     try {
-      setProgress(20)
-      const url = '/api/users/getusers'; // Replace with your actual URL
+      if (!title || !desc) {
+        toast.error("Title and description are required.");
+        return;
+      }
+
+      const url = '/api/posts'; // Replace with your actual URL
       const token = userState.userInfo.token;
 
       const headers = {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       };
-      setProgress(70)
+
       const postData = {
-        limit: selectedNumber,
-        page: currentPage,
-        searchKeyword: searchKeyword,
+        title: title,
+        caption: desc,
+        links: links
       };
 
       const response = await axios.post(url, postData, { headers });
-      if (response.status === 200) {
-        setUsers(response.data);
+      setProgress(70)
 
-        const totalCount = parseInt(response.headers["x-totalcount"]);
-        const pageSize = parseInt(response.headers["x-pagesize"]);
-        const totalPageCount = parseInt(response.headers["x-totalpagecount"]);
-        setTotalPages(totalPageCount);
+      if (response.status === 200) {
+        toast.success("Post is added");
       }
       setProgress(100)
+
     } catch (error) {
       setProgress(100)
 
@@ -72,112 +71,6 @@ const Admin = () => {
   }
 
 
-  const handleDelete = async (id) => {
-    try {
-      setProgress(20)
-      const url = '/api/users/deleteusers'; // Replace with your actual URL
-      const token = userState.userInfo.token;
-
-      const headers = {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      };
-
-      const postData = {
-        id: id,
-
-
-      };
-
-      const response = await axios.post(url, postData, { headers });
-      setProgress(70)
-
-      if (response.status === 200) {
-
-        const updatedUsers = users.filter(user => user._id !== response.data._id);
-        setUsers(updatedUsers);
-        toast.success("Deleted User")
-      }
-      setProgress(100)
-
-    } catch (error) {
-      toast.error("Something went wrong");
-      setProgress(100)
-
-      if (error.response && error.response.data.message)
-        throw new Error(error.response.data.message);
-
-
-      throw new Error(error.message);
-
-    }
-
-  };
-
-
-  const handleVerificationToggle = async (state, id) => {
-    try {
-      setProgress(20)
-      const url = '/api/users/approveusers'; // Replace with your actual URL
-      const token = userState.userInfo.token;
-
-      const headers = {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      };
-
-      const postData = {
-        id: id,
-        state: state
-
-      };
-
-      const response = await axios.post(url, postData, { headers });
-      setProgress(70)
-      if (response.status === 200) {
-        //  setComments(response.data)
-
-        const updatedUsers = users.map(user => {
-          if (user._id === id) {
-            return { ...user, verified: state }; // Modify fields as needed
-          }
-          return user;
-        });
-        setProgress(100)
-        setUsers(updatedUsers);
-        toast.success("Updated User")
-      }
-
-    } catch (error) {
-      setProgress(100)
-
-      toast.error("Something went wrong");
-      if (error.response && error.response.data.message)
-        throw new Error(error.response.data.message);
-
-
-      throw new Error(error.message);
-
-    }
-
-  };
-
-
-
-
-  const handleNumberChange = (event) => {
-    setSelectedNumber(event.target.value);
-  };
-
-
-  const handleSearchKeywordChange = (event) => {
-    setSearchKeyword(event.target.value)
-  };
-
-  useEffect(() => {
-
-    getUsers()
-  }, [currentPage])
 
   return (
     <>
@@ -186,108 +79,60 @@ const Admin = () => {
         progress={progress}
       // onLoaderFinished={() => setProgress(0)}
       />
-      <div className="text-gray-900 bg-gray-2300">
-        <div className="p-4 flex justify-between">
-          <h1 className="text-3xl">Users</h1>
-          <div className="justify-center md:flex-col items-end p-4 ">
-            <label className="mb-2 font-semibold mx-2">Select Number of Users:</label>
-            <input
-              type="number"
-              className="w-32 p-2 border border-gray-300 rounded mx-2"
-              value={selectedNumber}
-              onChange={handleNumberChange}
-            />
-            <input
-              type="text"
-              placeholder="Search user"
-              className="w-32 p-2 border border-gray-300 rounded mx-2"
-              value={searchKeyword}
-              onChange={handleSearchKeywordChange}
-            />
-            <button
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-              onClick={getUsers}
-            >
-              Get
-            </button>
+      <form onSubmit={handlesubmit}>
+        <div>
+          <div className="heading text-center font-bold text-2xl m-5 text-gray-800">New Post</div>
 
+          <div className="editor mx-auto w-10/12 flex flex-col text-gray-800 border border-gray-300 p-4 shadow-lg max-w-2xl">
+            <input value={title} onChange={handletitle} className="title bg-gray-100 border border-gray-300 p-2 mb-4 outline-none" spellcheck="false" placeholder="Title" type="text" />
+            <textarea value={desc} onChange={handledesc} className="description bg-gray-100 sec p-3 h-60 border border-gray-300 outline-none" spellcheck="false" placeholder="Describe everything about this post here"></textarea>
+
+
+            {links.map((link, index) => (
+              <>
+                <h1 className='font-bold font-roboto text-center mt-2'>Link {index + 1}</h1>
+                <input
+                  className="title bg-gray-100 border border-gray-300 p-2 mb-4 outline-none"
+                  spellCheck="false"
+                  placeholder={`Insert title ${index + 1}`}
+                  type="text"
+                  value={link.title}
+                  onChange={(e) => handleChange(index, "title", e.target.value)}
+                />
+                <textarea
+                  className="description bg-gray-100 sec p-3 h-24 border border-gray-300 outline-none"
+                  spellCheck="false"
+                  placeholder="Place code here"
+                  value={link.code}
+                  onChange={(e) => handleChange(index, "code", e.target.value)}
+                ></textarea>
+              </>
+            ))}
+
+
+
+
+            <div className="buttons flex mt-2">
+              <button
+                onClick={handleclear}
+                className="btn border border-gray-300 p-1 px-4 font-semibold cursor-pointer text-gray-500 ml-auto"
+                type="button" // This is a regular button, not for form submission
+              >
+                Cancel
+              </button>
+              <button
+                className="btn border border-indigo-500 p-1 px-4 font-semibold cursor-pointer text-gray-200 ml-2 bg-indigo-500"
+                type="submit" // This button will submit the form
+              >
+                Post
+              </button>
+            </div>
 
           </div>
-
         </div>
-        <div className="px-3 py-4 flex justify-center flex-col items-center">
-          <table className="w-full text-md bg-white shadow-md rounded mb-4">
-            <tbody>
-              <tr className="border-b">
-                <th className="text-left p-3 px-5">Name</th>
-                <th className="text-left p-3 px-5">Email</th>
-                <th className="text-left p-3 px-5">Role</th>
-                <th className="text-left p-3 px-5">Verified</th> {/* Add this column */}
-                <th></th>
-              </tr>
-              {users.map((user, index) => (
-                <tr key={user._id} className="border-b hover:bg-orange-100 bg-gray-100">
-                  <td className="p-3 px-5">
-                    <input type="text" value={user.name} className="bg-transparent" />
-                  </td>
-                  <td className="p-3 px-5">
-                    <input type="text" value={user.email} className="bg-transparent" />
-                  </td>
-                  <td className="p-3 px-5">
-                    {user.admin ? <span className='text-green-600 font-roboto'>Admin</span> : <span className='text-red-500 font-roboto'>User</span>}
-                  </td>
-                  <td className="p-3 px-5">
-                    {user.verified ? (
-                      <button
-                        className="text-green-600"
-                        onClick={() => handleVerificationToggle(false, user._id)}
-                      >
-                        Verified
-                      </button>
-                    ) : (
-                      <button
-                        className="text-red-600"
-                        onClick={() => handleVerificationToggle(true, user._id)}
-                      >
-                        Not Verified
-                      </button>
-                    )}
-                  </td>
-                  <td className="p-3 px-5 flex justify-end">
-                    {user.admin ? "" : <button
-                      onClick={() => { handleDelete(user._id) }}
-                      type="button"
-                      className="text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline"
-                    >
-                      Delete
-                    </button>}
-
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {(
-            <Pagination
-              onPageChange={(page) => setCurrentPage(page)}
-              currentPage={currentPage}
-              totalPageCount={totalPages
-              }
-            />
-          )}
-        </div>
-
-      </div>
+      </form>
     </>
-  );
-};
+  )
+}
 
-
-
-
-
-
-
-
-export default Admin;
+export default Admin

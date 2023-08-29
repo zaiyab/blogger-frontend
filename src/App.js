@@ -14,6 +14,7 @@ import NewPost from "./pages/admin/screens/posts/NewPost";
 import ManagePosts from "./pages/admin/screens/posts/ManagePosts";
 import EditPost from "./pages/admin/screens/posts/EditPost";
 import ArticlePage from "./pages/home/ArticlePage";
+import Users from "./pages/admin/screens/Users";
 
 function App() {
   return (
@@ -29,6 +30,8 @@ function App() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Admin />} />
           <Route path="comments/:id" element={<Comments />} />
+          <Route path="users" element={<Users />} />
+
           <Route path="posts/new" element={<NewPost />} />
           <Route path="posts/manage" element={<ManagePosts />} />
           <Route path="posts/manage/edit/:slug" element={<EditPost />} />
