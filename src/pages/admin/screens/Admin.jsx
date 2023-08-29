@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import LoadingBar from 'react-top-loading-bar';
 import Pagination from '../../../components/Pagination';
-let isFirstRun = true;
+
 
 const Admin = () => {
 
