@@ -76,9 +76,24 @@ const ArticleDetailPage = () => {
 
 
             </div>
-            <div className="w-full">
-              <iframe className="w-full lg:h-[450px] h-[300px]" src="https://www.youtube.com/embed/wdi8_Hv3Lso?si=lKnyfjHTtudjMtPF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-            </div>
+
+            {data.links !== null &&
+              data.links.map((e) => {
+                if (e.code.trim() === '') {
+                  return null; // Skip rendering for empty e.code
+                }
+
+                return (
+
+                  <div key={e.title} className="flex flex-col items-center py-2">
+                    <h1 className="md:text-4xl mb-4 font-roboto text-dark-hard text-xl">{e.title}</h1>
+                    <div className="w-full lg:h-[450px] h-[300px]" dangerouslySetInnerHTML={{ __html: e.code }} />
+                  </div>
+
+
+                );
+              })
+            }
             <CommentsContainer
               comments={data?.comments}
               className="mt-10"

@@ -54,11 +54,12 @@ const Articles2 = ({ searchKeyword = '', page = 1, limit = 12, setProgress }) =>
                         <ErrorMessage message="Couldn't fetch the posts data" />
                     ) : (
                         data?.data.map((post) => (
-                            <ArticleCard
+                            post.active ? <ArticleCard
                                 key={post._id}
                                 post={post}
                                 className="w-full md:w-[calc(50%-20px)] lg:w-[calc(33.33%-21px)]"
-                            />
+                            /> : ""
+
                         ))
                     )}
 

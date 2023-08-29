@@ -6,6 +6,7 @@ import Pagination from "../../../../components/Pagination";
 import { toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import axios from "axios";
 
 let isFirstRun = true;
 
@@ -65,6 +66,46 @@ const ManagePosts = () => {
   const deletePostHandler = ({ slug, token }) => {
     mutateDeletePost({ slug, token });
   };
+
+  const handleActiveToggle = async (state, id) => {
+    try {
+      const url = '/api/posts/approvePost'; // Replace with your actual URL
+      const token = userState.userInfo.token;
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      };
+
+      const postData = {
+        id: id,
+        active: state
+
+      };
+
+      const response = await axios.post(url, postData, { headers });
+      if (response.status === 200) {
+        //  setComments(response.data)
+        refetch()
+
+        toast.success("Updated Post")
+      }
+
+    } catch (error) {
+
+      toast.error("Something went wrong");
+      if (error.response && error.response.data.message)
+        throw new Error(error.response.data.message);
+
+
+      throw new Error(error.message);
+
+    }
+
+  };
+
+
+
 
   return (
     <div>
@@ -229,6 +270,21 @@ const ManagePosts = () => {
                           >
                             View Comments
                           </Link>
+                          {post.active ? (
+                            <button
+                              className="text-green-600"
+                              onClick={() => handleActiveToggle(false, post._id)}
+                            >
+                              Verified
+                            </button>
+                          ) : (
+                            <button
+                              className="text-red-600"
+                              onClick={() => handleActiveToggle(true, post._id)}
+                            >
+                              Not Verified
+                            </button>
+                          )}
 
                         </td>
 
