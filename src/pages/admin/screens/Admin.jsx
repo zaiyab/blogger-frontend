@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
-import { GrLinkNext, GrLinkPrevious } from "react-icons/gr"
 import LoadingBar from 'react-top-loading-bar';
+import Pagination from '../../../components/Pagination';
+let isFirstRun = true;
+
 const Admin = () => {
 
 
@@ -189,8 +191,10 @@ const Admin = () => {
   };
 
   useEffect(() => {
+
     getUsers()
   }, [currentPage])
+
   return (
     <>
       <LoadingBar
@@ -279,35 +283,15 @@ const Admin = () => {
               ))}
             </tbody>
           </table>
-          <div className="flex items-center mb-3">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage <= 1}
-              className='mx-2'
-            >
-              <GrLinkPrevious />
-            </button>
-            <input
-              type="number"
-              value={jumpPage}
-              onChange={handleJumpPageChange}
-              className="mx-2 w-16 text-center"
-            />
-            <button
-              onClick={handleJumpToPage}
-              className="mx-2 px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-            >
-              Go
-            </button>
-            <span className="mx-2 font-roboto  text-dark-hard" >Page&nbsp;{currentPage}&nbsp;Of&nbsp;{totalPages}</span>
-            <button
 
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage >= totalPages}
-            >
-              < GrLinkNext />
-            </button>
-          </div>
+          {(
+            <Pagination
+              onPageChange={(page) => setCurrentPage(page)}
+              currentPage={currentPage}
+              totalPageCount={totalPages
+              }
+            />
+          )}
         </div>
 
       </div>
