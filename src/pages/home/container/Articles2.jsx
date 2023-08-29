@@ -1,24 +1,25 @@
 import React, { useState } from "react";
-import { GrLinkNext, GrLinkPrevious } from "react-icons/gr"
-
+import Pagination from "../../../components/Pagination";
 import ArticleCard from "../../../components/ArticleCard";
 import { useQuery } from "@tanstack/react-query";
 import { getAllPosts } from "../../../services/index/posts";
 import { toast } from "react-hot-toast";
 import ArticleCardSkeleton from "../../../components/ArticleCardSkeleton";
 import ErrorMessage from "../../../components/ErrorMessage";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+let isFirstRun = true;
 
 const Articles2 = ({ searchKeyword = '', page = 1, limit = 12, setProgress }) => {
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1); // 
-    const [jumpPage, setJumpPage] = useState(currentPage);
+
+
 
     setProgress(40)
-    const { data, isLoading, isError } = useQuery({
+    const { data, isLoading, isError, refetch,
+    } = useQuery({
 
-        queryFn: () => getAllPosts(searchKeyword, page, limit),
+        queryFn: () => getAllPosts(searchKeyword, currentPage, limit),
         queryKey: ["posts",],
         onError: (error) => {
             toast.error(error.message);
@@ -26,22 +27,15 @@ const Articles2 = ({ searchKeyword = '', page = 1, limit = 12, setProgress }) =>
     });
     setProgress(100)
 
-
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
-        //  getUsers();
-    };
-    const handleJumpPageChange = (event) => {
-        const newJumpPage = parseInt(event.target.value);
-        setJumpPage(newJumpPage);
-    };
-    const handleJumpToPage = () => {
-        if (jumpPage >= 1 && jumpPage <= totalPages) {
-            setCurrentPage(jumpPage);
-            setJumpPage(jumpPage);
-            //     getUsers();
+    useEffect(() => {
+        if (isFirstRun) {
+            isFirstRun = false;
+            return;
         }
-    };
+        refetch();
+    }, [refetch, currentPage])
+
+
 
     return (
         <>
@@ -67,37 +61,18 @@ const Articles2 = ({ searchKeyword = '', page = 1, limit = 12, setProgress }) =>
                             />
                         ))
                     )}
-                    <div className="flex items-center mb-3">
-                        <button
-                            onClick={() => handlePageChange(currentPage - 1)}
-                            disabled={currentPage <= 1}
-                            className='mx-2'
-                        >
-                            <GrLinkPrevious />
-                        </button>
-                        <input
-                            type="number"
-                            value={jumpPage}
-                            onChange={handleJumpPageChange}
-                            className="mx-2 w-16 text-center"
-                        />
-                        <button
-                            onClick={handleJumpToPage}
-                            className="mx-2 px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-                        >
-                            Go
-                        </button>
-                        <span className="mx-2 font-roboto  text-dark-hard" >Page&nbsp;{currentPage}&nbsp;Of&nbsp;{totalPages}</span>
-                        <button
 
-                            onClick={() => handlePageChange(currentPage + 1)}
-                            disabled={currentPage >= totalPages}
-                        >
-                            < GrLinkNext />
-                        </button>
-                    </div>
+
                 </div>
-
+                {!isLoading && (
+                    <Pagination
+                        onPageChange={(page) => setCurrentPage(page)}
+                        currentPage={currentPage}
+                        totalPageCount={JSON.parse(
+                            data?.headers?.["x-totalpagecount"]
+                        )}
+                    />
+                )}
             </section>
         </>
     );

@@ -5,7 +5,6 @@ import { FiSearch } from "react-icons/fi";
 const Search = ({ search }) => {
     const [value, setValue] = useState('*')
     const [clicled, setClicked] = useState(null)
-    const [chbc, setChbc] = useState(null)
 
     console.log(value, clicled)
 
