@@ -43,7 +43,6 @@ const EditPost = () => {
     },
     onError: (error) => {
       toast.error(error.message);
-      console.log(error);
     },
   });
 
@@ -86,7 +85,6 @@ const EditPost = () => {
       updatedData.append("postPicture", picture);
     }
     updatedData.append("document", JSON.stringify({ body }));
-    console.log(links)
     updatedData.append("links", JSON.stringify(links));
 
 
