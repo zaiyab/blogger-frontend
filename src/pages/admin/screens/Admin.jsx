@@ -4,8 +4,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import LoadingBar from 'react-top-loading-bar';
 import Pagination from '../../../components/Pagination';
-import { getUsers } from "../../../services/index/users"
-import { useQuery } from "@tanstack/react-query";
+let isFirstRun = true;
 
 const Admin = () => {
 
@@ -32,57 +31,46 @@ const Admin = () => {
       "__v": 0
     },])
 
-  // const getUsers = async (searchKeyword,currentPage,limit) => {
-  //   try {
-  //     setProgress(20)
-  //     const url = '/api/users/getusers'; // Replace with your actual URL
-  //     const token = userState.userInfo.token;
+  const getUsers = async () => {
+    try {
+      setProgress(20)
+      const url = '/api/users/getusers'; // Replace with your actual URL
+      const token = userState.userInfo.token;
 
-  //     const headers = {
-  //       Authorization: `Bearer ${token}`,
-  //       'Content-Type': 'application/json',
-  //     };
-  //     setProgress(70)
-  //     const postData = {
-  //       limit: limit,
-  //       page: currentPage,
-  //       searchKeyword: searchKeyword,
-  //     };
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      };
+      setProgress(70)
+      const postData = {
+        limit: selectedNumber,
+        page: currentPage,
+        searchKeyword: searchKeyword,
+      };
 
-  //     const response = await axios.post(url, postData, { headers });
-  //     if (response.status === 200) {
-  //       setUsers(response.data);
+      const response = await axios.post(url, postData, { headers });
+      if (response.status === 200) {
+        setUsers(response.data);
 
-  //       const totalCount = parseInt(response.headers["x-totalcount"]);
-  //       const pageSize = parseInt(response.headers["x-pagesize"]);
-  //       const totalPageCount = parseInt(response.headers["x-totalpagecount"]);
-  //       setTotalPages(totalPageCount);
-  //     }
-  //     setProgress(100)
-  //   } catch (error) {
-  //     setProgress(100)
+        const totalCount = parseInt(response.headers["x-totalcount"]);
+        const pageSize = parseInt(response.headers["x-pagesize"]);
+        const totalPageCount = parseInt(response.headers["x-totalpagecount"]);
+        setTotalPages(totalPageCount);
+      }
+      setProgress(100)
+    } catch (error) {
+      setProgress(100)
 
-  //     toast.error("Something went wrong");
-  //     if (error.response && error.response.data.message)
-  //       throw new Error(error.response.data.message);
+      toast.error("Something went wrong");
+      if (error.response && error.response.data.message)
+        throw new Error(error.response.data.message);
 
 
-  //     throw new Error(error.message);
+      throw new Error(error.message);
 
-  //   }
+    }
 
-  // }
-
-  const { data, isLoading, isError, refetch
-  } = useQuery({
-
-    queryFn: () => getUsers(searchKeyword, currentPage, selectedNumber, userState),
-    queryKey: ["posts",],
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
+  }
 
 
   const handleDelete = async (id) => {
@@ -203,12 +191,9 @@ const Admin = () => {
   };
 
   useEffect(() => {
-    console.log(data)
-    setUsers(data.users)
-    setTotalPages(data.totalPageCount)
-    refetch()
-  }, [currentPage, data, refetch])
 
+    getUsers()
+  }, [currentPage])
 
   return (
     <>
@@ -217,7 +202,7 @@ const Admin = () => {
         progress={progress}
       // onLoaderFinished={() => setProgress(0)}
       />
-      {<div className="text-gray-900 bg-gray-2300">
+      <div className="text-gray-900 bg-gray-2300">
         <div className="p-4 flex justify-between">
           <h1 className="text-3xl">Users</h1>
           <div className="justify-center md:flex-col items-end p-4 ">
@@ -237,7 +222,7 @@ const Admin = () => {
             />
             <button
               className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-              onClick={refetch}
+              onClick={getUsers}
             >
               Get
             </button>
@@ -310,7 +295,6 @@ const Admin = () => {
         </div>
 
       </div>
-      }
     </>
   );
 };
