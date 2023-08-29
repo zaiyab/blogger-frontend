@@ -8,7 +8,7 @@ import LoadingBar from 'react-top-loading-bar';
 const NewPost = () => {
   const userState = useSelector((state) => state.user);
   const [progress, setProgress] = useState(0)
-
+  const [links, setLinks] = useState([{ title: "", code: '' }, { title: "", code: '' }, { title: "Paste title here", code: 'place code here' }])
   const [title, setTitle] = useState();
   const handletitle = (v) => {
     setTitle(v.target.value)
@@ -17,6 +17,11 @@ const NewPost = () => {
   const handledesc = (v) => {
     setDesc(v.target.value)
   }
+  const handleChange = (index, field, value) => {
+    const newLinks = [...links];
+    newLinks[index][field] = value;
+    setLinks(newLinks);
+  };
   const handleclear = () => {
     setTitle("");
     setDesc('');
@@ -24,7 +29,6 @@ const NewPost = () => {
   const handlesubmit = async (e) => {
     e.preventDefault();
     try {
-
       if (!title || !desc) {
         toast.error("Title and description are required.");
         return;
@@ -40,7 +44,8 @@ const NewPost = () => {
 
       const postData = {
         title: title,
-        caption: desc
+        caption: desc,
+        links: links
       };
 
       const response = await axios.post(url, postData, { headers });
@@ -81,6 +86,29 @@ const NewPost = () => {
           <div className="editor mx-auto w-10/12 flex flex-col text-gray-800 border border-gray-300 p-4 shadow-lg max-w-2xl">
             <input value={title} onChange={handletitle} className="title bg-gray-100 border border-gray-300 p-2 mb-4 outline-none" spellcheck="false" placeholder="Title" type="text" />
             <textarea value={desc} onChange={handledesc} className="description bg-gray-100 sec p-3 h-60 border border-gray-300 outline-none" spellcheck="false" placeholder="Describe everything about this post here"></textarea>
+
+
+            {links.map((link, index) => (
+              <>
+                <h1 className='font-bold font-roboto text-center mt-2'>Link {index + 1}</h1>
+                <input
+                  className="title bg-gray-100 border border-gray-300 p-2 mb-4 outline-none"
+                  spellCheck="false"
+                  placeholder={`Insert title ${index + 1}`}
+                  type="text"
+                  value={link.title}
+                  onChange={(e) => handleChange(index, "title", e.target.value)}
+                />
+                <textarea
+                  className="description bg-gray-100 sec p-3 h-24 border border-gray-300 outline-none"
+                  spellCheck="false"
+                  placeholder="Place code here"
+                  value={link.code}
+                  onChange={(e) => handleChange(index, "code", e.target.value)}
+                ></textarea>
+              </>
+            ))}
+
 
 
 

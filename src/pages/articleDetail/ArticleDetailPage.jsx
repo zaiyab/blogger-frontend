@@ -79,7 +79,7 @@ const ArticleDetailPage = () => {
 
             {data.links !== null &&
               data.links.map((e) => {
-                if (e.code.trim() === '') {
+                if (e.code === '') {
                   return null; // Skip rendering for empty e.code
                 }
 

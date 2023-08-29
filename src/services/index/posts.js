@@ -48,7 +48,6 @@ export const updatePost = async ({ updatedData, slug, token }) => {
         Authorization: `Bearer ${token}`,
       },
     };
-
     const { data } = await axios.put(`/api/posts/${slug}`, updatedData, config);
     return data;
   } catch (error) {

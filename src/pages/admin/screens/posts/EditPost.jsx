@@ -18,6 +18,8 @@ const EditPost = () => {
   const [initialPhoto, setInitialPhoto] = useState(null);
   const [photo, setPhoto] = useState(null);
   const [body, setBody] = useState(null);
+  const [links, setLinks] = useState([{ title: "Paste title here", code: 'place code here' }, { title: "Paste title here", code: 'place code here' }, { title: "Paste title here", code: 'place code here' }])
+
 
   const { data, isLoading, isError } = useQuery({
     queryFn: () => getSinglePost({ slug }),
@@ -49,8 +51,15 @@ const EditPost = () => {
     if (!isLoading && !isError) {
       setInitialPhoto(data?.photo);
     }
+    data?.links ? setLinks(data.links) : setLinks(links)
+
   }, [data, isError, isLoading]);
 
+  const handleChange = (index, field, value) => {
+    const newLinks = [...links];
+    newLinks[index][field] = value;
+    setLinks(newLinks);
+  };
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setPhoto(file);
@@ -59,8 +68,10 @@ const EditPost = () => {
   const handleUpdatePost = async () => {
     let updatedData = new FormData();
 
+
     if (!initialPhoto && photo) {
       updatedData.append("postPicture", photo);
+
     } else if (initialPhoto && !photo) {
       const urlToObject = async (url) => {
         let reponse = await fetch(url);
@@ -74,8 +85,10 @@ const EditPost = () => {
 
       updatedData.append("postPicture", picture);
     }
-
     updatedData.append("document", JSON.stringify({ body }));
+    console.log(links)
+    updatedData.append("links", JSON.stringify(links));
+
 
     mutateUpdatePostDetail({
       updatedData,
@@ -92,7 +105,7 @@ const EditPost = () => {
   };
 
   return (
-    <div>
+    <div className="flex flex-col">
       {isLoading ? (
         <ArticleDetailSkeleton />
       ) : isError ? (
@@ -156,6 +169,30 @@ const EditPost = () => {
                 />
               )}
             </div>
+            <div className="editor mx-auto w-full flex flex-col text-gray-800 border border-gray-300 p-4 shadow-lg ">
+
+              {links.map((link, index) => (
+                <>
+                  <h1 className='font-bold font-roboto text-center mt-2'>Link {index + 1}</h1>
+                  <input
+                    className="title bg-gray-100 border border-gray-300 p-2 mb-4 outline-none"
+                    spellCheck="false"
+                    placeholder={`Insert title ${index + 1}`}
+                    type="text"
+                    value={link.title}
+                    onChange={(e) => handleChange(index, "title", e.target.value)}
+                  />
+                  <textarea
+                    className="description bg-gray-100 sec p-3 h-24 border border-gray-300 outline-none"
+                    spellCheck="false"
+                    placeholder="Place code here"
+                    value={link.code}
+                    onChange={(e) => handleChange(index, "code", e.target.value)}
+                  ></textarea>
+                </>
+              ))}
+
+            </div>
             <button
               disabled={isLoadingUpdatePostDetail}
               type="button"
@@ -164,9 +201,11 @@ const EditPost = () => {
             >
               Update Post
             </button>
+
           </article>
         </section>
       )}
+
     </div>
   );
 };
