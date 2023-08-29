@@ -12,7 +12,6 @@ import { getAllPosts, getSinglePost } from "../../services/index/posts";
 import ArticleDetailSkeleton from "./components/ArticleDetailSkeleton";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useSelector } from "react-redux";
-import parseJsonToHtml from "../../utils/parseJsonToHtml";
 import Editor from "../../components/editor/Editor";
 
 const ArticleDetailPage = () => {
@@ -45,7 +44,7 @@ const ArticleDetailPage = () => {
         <ErrorMessage message="Couldn't fetch the post detail" />
       ) : (
         <section className="container mx-auto max-w-5xl flex flex-col px-5 py-5 lg:flex-row lg:gap-x-5 lg:items-start">
-          {data?.active ? <article className="flex-1">
+          {data?.active ? <article className="flex-1 ">
             <BreadCrumbs data={breadCrumbsData} />
             <img
               className="rounded-xl w-full"
@@ -85,21 +84,23 @@ const ArticleDetailPage = () => {
 
                 return (
 
-                  <div key={e.title} className="flex flex-col items-center py-2">
+                  <div key={e.title} className="flex flex-col  py-2 mt-5">
                     <h1 className="md:text-4xl mb-4 font-roboto text-dark-hard text-xl">{e.title}</h1>
-                    <div className="w-full lg:h-[450px] h-[300px]" dangerouslySetInnerHTML={{ __html: e.code }} />
+                    <div className={`w-full  h-[400px]`} dangerouslySetInnerHTML={{ __html: e.code }} />
                   </div>
 
 
                 );
               })
             }
+            <div>
             <CommentsContainer
               comments={data?.comments}
-              className="mt-10"
+              className="mt-8"
               logginedUserId={userState?.userInfo?._id}
               postSlug={slug}
             />
+            </div>
           </article> : <ArticleDetailSkeleton />
           }
           <div>
