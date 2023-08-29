@@ -45,7 +45,7 @@ const ArticleDetailPage = () => {
         <ErrorMessage message="Couldn't fetch the post detail" />
       ) : (
         <section className="container mx-auto max-w-5xl flex flex-col px-5 py-5 lg:flex-row lg:gap-x-5 lg:items-start">
-          <article className="flex-1">
+          {data?.active ? <article className="flex-1">
             <BreadCrumbs data={breadCrumbsData} />
             <img
               className="rounded-xl w-full"
@@ -100,7 +100,8 @@ const ArticleDetailPage = () => {
               logginedUserId={userState?.userInfo?._id}
               postSlug={slug}
             />
-          </article>
+          </article> : <ArticleDetailSkeleton />
+          }
           <div>
             <SuggestedPosts
               header="Latest Article"
