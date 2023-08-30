@@ -19,6 +19,7 @@ import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Categories from "./pages/admin/screens/Categories";
 
 function App() {
   const userState = useSelector((state) => state.user);
@@ -68,6 +69,7 @@ function App() {
           <Route index element={<Admin />} />
           <Route path="comments/:id" element={<Comments />} />
           <Route path="users" element={<Users />} />
+          <Route path="categories" element={<Categories />} />
 
           <Route path="posts/new" element={<NewPost />} />
           <Route path="posts/manage" element={<ManagePosts />} />

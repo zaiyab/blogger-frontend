@@ -18,7 +18,7 @@ const EditPost = () => {
   const [initialPhoto, setInitialPhoto] = useState(null);
   const [photo, setPhoto] = useState(null);
   const [body, setBody] = useState(null);
-  const [links, setLinks] = useState([{ title: "Paste title here", code: 'place code here' }, { title: "Paste title here", code: 'place code here' }, { title: "Paste title here", code: 'place code here' }])
+  const [links, setLinks] = useState([{ title: "", code: '' }, { title: "", code: '' }, { title: "", code: '' }])
 
 
   const { data, isLoading, isError } = useQuery({

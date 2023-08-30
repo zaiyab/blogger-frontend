@@ -3,6 +3,7 @@ import { useWindowSize } from "@uidotdev/usehooks";
 
 import { images } from "../../../../constants";
 import { useEffect, useState } from "react";
+import { BiCategory } from 'react-icons/bi'
 import { AiFillDashboard, AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import { FaUsers } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
@@ -15,6 +16,13 @@ const MENU_ITEMS = [
     link: "/admin",
     icon: <AiFillDashboard className="text-xl" />,
     name: "dashboard",
+    type: "link",
+  },
+  {
+    title: "Categories",
+    link: "/admin/categories",
+    icon: <BiCategory className="text-xl" />,
+    name: "categories",
     type: "link",
   },
   {
