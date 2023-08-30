@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { getSinglePost, updatePost } from "../../../../services/index/posts";
 import { Link, useParams } from "react-router-dom";
-import ArticleDetailSkeleton from "../../../articleDetail/components/ArticleDetailSkeleton";
+import BlogDetailSkeleton from "../../../blogDetail/components/BlogDetailSkeleton";
 import ErrorMessage from "../../../../components/ErrorMessage";
 import parseJsonToHtml from "../../../../utils/parseJsonToHtml";
 import { stables } from "../../../../constants";
@@ -105,7 +105,7 @@ const EditPost = () => {
   return (
     <div className="flex flex-col">
       {isLoading ? (
-        <ArticleDetailSkeleton />
+        <BlogDetailSkeleton />
       ) : isError ? (
         <ErrorMessage message="Couldn't fetch the post detail" />
       ) : (

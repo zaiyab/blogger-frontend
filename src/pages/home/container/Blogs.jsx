@@ -1,15 +1,13 @@
 import React, { useState } from "react";
-import { FaArrowRight } from "react-icons/fa";
 
-import ArticleCard from "../../../components/ArticleCard";
+import BlogCard from "../../../components/BlogCard";
 import { useQuery } from "@tanstack/react-query";
 import { getAllPosts } from "../../../services/index/posts";
 import { toast } from "react-hot-toast";
-import ArticleCardSkeleton from "../../../components/ArticleCardSkeleton";
+import BlogCardSkeleton from "../../../components/BlogCardSkeleton";
 import ErrorMessage from "../../../components/ErrorMessage";
-import { Link } from "react-router-dom";
 
-const Articles = ({ searchKeyword = '', page = 1, limit = 12, setProgress, category }) => {
+const Blogs = ({ searchKeyword = '', page = 1, limit = 12, setProgress, category }) => {
   setProgress(40)
   const { data, isLoading, isError } = useQuery({
 
@@ -30,7 +28,7 @@ const Articles = ({ searchKeyword = '', page = 1, limit = 12, setProgress, categ
         <div className=" flex flex-wrap md:gap-x-5 gap-y-5 pb-10">
           {isLoading ? (
             [...Array(3)].map((item, index) => (
-              <ArticleCardSkeleton
+              <BlogCardSkeleton
                 key={index}
                 className="w-full md:w-[calc(50%-20px)] lg:w-[calc(33.33%-21px)]"
               />
@@ -40,7 +38,7 @@ const Articles = ({ searchKeyword = '', page = 1, limit = 12, setProgress, categ
           ) : (
             data?.data.map((post) => (
 
-              post.active ? <ArticleCard
+              post.active ? <BlogCard
                 key={post._id}
                 post={post}
                 className="w-full md:w-[calc(50%-20px)] lg:w-[calc(33.33%-21px)]"
@@ -48,15 +46,10 @@ const Articles = ({ searchKeyword = '', page = 1, limit = 12, setProgress, categ
             ))
           )}
         </div>
-        <Link to="/articles" >
-          <button className="mx-auto flex items-center gap-x-2 font-bold text-primary border-2 border-primary px-6 py-3 rounded-lg">
-            <span>More articles</span>
-            <FaArrowRight className="w-3 h-3" />
-          </button>
-        </Link>
+
       </section>
     </>
   );
 };
 
-export default Articles;
+export default Blogs;

@@ -1,6 +1,6 @@
 import { BiImageAlt } from "react-icons/bi";
 
-const ArticleDetailSkeleton = () => {
+const BlogDetailSkeleton = () => {
   return (
     <section className="container mx-auto max-w-5xl flex flex-col px-5 py-5 lg:flex-row lg:gap-x-5 lg:items-start animate-pulse">
       <article className="flex-1">
@@ -45,4 +45,4 @@ const ArticleDetailSkeleton = () => {
   );
 };
 
-export default ArticleDetailSkeleton;
+export default BlogDetailSkeleton;

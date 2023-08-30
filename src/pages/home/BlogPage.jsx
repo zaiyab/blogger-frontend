@@ -6,11 +6,11 @@ import LoadingBar from 'react-top-loading-bar';
 
 import { useState } from "react";
 import Search from "../../components/Search";
-import Articles from "./container/Articles";
+import Blogs from "./container/Blogs";
 import { useLocation } from "react-router-dom";
 
 
-const ArticlePage = () => {
+const BlogPage = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const [category, setCategory] = useState(queryParams.get("category"))
@@ -29,10 +29,10 @@ const ArticlePage = () => {
             />
             <div className="flex flex-col items-center  ">
                 <Search search={search} />
-                <Articles category={category ? category : ''} searchKeyword={searchKeyword} key={searchKeyword} setProgress={setProgress} />
+                <Blogs category={category ? category : ''} searchKeyword={searchKeyword} key={searchKeyword} setProgress={setProgress} />
             </div>
         </MainLayout>
     );
 };
 
-export default ArticlePage;
+export default BlogPage;

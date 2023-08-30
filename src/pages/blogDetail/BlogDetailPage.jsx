@@ -9,12 +9,12 @@ import { images, stables } from "../../constants";
 import SuggestedPosts from "./container/SuggestedPosts";
 import { useQuery } from "@tanstack/react-query";
 import { getAllPosts, getSinglePost } from "../../services/index/posts";
-import ArticleDetailSkeleton from "./components/ArticleDetailSkeleton";
+import ArticleDetailSkeleton from "./components/BlogDetailSkeleton";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useSelector } from "react-redux";
 import Editor from "../../components/editor/Editor";
 
-const ArticleDetailPage = () => {
+const BlogDetailPage = () => {
   const { slug } = useParams();
   const userState = useSelector((state) => state.user);
   const [breadCrumbsData, setbreadCrumbsData] = useState([]);
@@ -26,7 +26,7 @@ const ArticleDetailPage = () => {
     onSuccess: (data) => {
       setbreadCrumbsData([
         { name: "Home", link: "/" },
-        { name: "Blog", link: "/blog" },
+        { name: "Blogs", link: "/blogs" },
         { name: data.title, link: `/blog/${data.slug}` },
       ]);
       // setBody(parseJsonToHtml(data?.body));
@@ -58,7 +58,7 @@ const ArticleDetailPage = () => {
             <div className="mt-4 flex gap-2">
               {data?.categories.map((category) => (
                 <Link
-                  to={`/blog?category=${category._id}`}
+                  to={`/blogs?category=${category._id}`}
                   className="text-primary text-sm font-roboto inline-block md:text-base"
                 >
                   {category.name}
@@ -126,4 +126,4 @@ const ArticleDetailPage = () => {
   );
 };
 
-export default ArticleDetailPage;
+export default BlogDetailPage;

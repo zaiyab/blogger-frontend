@@ -5,7 +5,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { images, stables } from "../constants";
 import { Link } from "react-router-dom";
 
-const ArticleCard = ({ post, className }) => {
+const BlogCard = ({ post, className }) => {
   return (
     <div
       className={`rounded-xl overflow-hidden shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px] ${className}`}
@@ -47,9 +47,8 @@ const ArticleCard = ({ post, className }) => {
               </h4>
               <div className="flex items-center gap-x-2">
                 <span
-                  className={`${
-                    post.user.verified ? "bg-[#36B37E]" : "bg-red-500"
-                  } w-fit bg-opacity-20 p-1.5 rounded-full`}
+                  className={`${post.user.verified ? "bg-[#36B37E]" : "bg-red-500"
+                    } w-fit bg-opacity-20 p-1.5 rounded-full`}
                 >
                   {post.user.verified ? (
                     <BsCheckLg className="w-1.5 h-1.5 text-[#36B37E]" />
@@ -75,4 +74,4 @@ const ArticleCard = ({ post, className }) => {
   );
 };
 
-export default ArticleCard;
+export default BlogCard;
