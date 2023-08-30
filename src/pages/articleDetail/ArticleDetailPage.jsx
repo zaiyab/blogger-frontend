@@ -26,7 +26,7 @@ const ArticleDetailPage = () => {
     onSuccess: (data) => {
       setbreadCrumbsData([
         { name: "Home", link: "/" },
-        { name: "Blog", link: "/articles" },
+        { name: "Blog", link: "/blog" },
         { name: data.title, link: `/blog/${data.slug}` },
       ]);
       // setBody(parseJsonToHtml(data?.body));
@@ -36,7 +36,6 @@ const ArticleDetailPage = () => {
     queryFn: () => getAllPosts(),
     queryKey: ["posts"],
   });
-  console.log(data)
   return (
     <MainLayout>
       {isLoading ? (
@@ -59,7 +58,7 @@ const ArticleDetailPage = () => {
             <div className="mt-4 flex gap-2">
               {data?.categories.map((category) => (
                 <Link
-                  to={`/blog?category=${category.name}`}
+                  to={`/blog?category=${category._id}`}
                   className="text-primary text-sm font-roboto inline-block md:text-base"
                 >
                   {category.name}

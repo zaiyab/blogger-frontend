@@ -9,11 +9,11 @@ import ArticleCardSkeleton from "../../../components/ArticleCardSkeleton";
 import ErrorMessage from "../../../components/ErrorMessage";
 import { Link } from "react-router-dom";
 
-const Articles = ({ searchKeyword = '', page = 1, limit = 12, setProgress }) => {
+const Articles = ({ searchKeyword = '', page = 1, limit = 12, setProgress, category }) => {
   setProgress(40)
   const { data, isLoading, isError } = useQuery({
 
-    queryFn: () => getAllPosts(searchKeyword, page, limit),
+    queryFn: () => getAllPosts(searchKeyword, page, limit, category),
     queryKey: ["posts",],
     onError: (error) => {
       toast.error(error.message);

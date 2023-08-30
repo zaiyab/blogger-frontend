@@ -4,7 +4,7 @@ export const getAllPosts = async (
   searchKeyword = "",
   page = 1,
   limit = 12,
-  category
+  category = ""
 ) => {
   try {
     const { data, headers } = await axios.get(

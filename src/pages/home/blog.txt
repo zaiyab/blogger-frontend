@@ -10,7 +10,7 @@ import Articles from "./container/Articles";
 import { useLocation } from "react-router-dom";
 
 
-const ArticlePage = () => {
+const Blog = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const [category, setCategory] = useState(queryParams.get("category"))
@@ -35,4 +35,4 @@ const ArticlePage = () => {
     );
 };
 
-export default ArticlePage;
+export default Blog;
