@@ -244,7 +244,7 @@ const ManagePosts = () => {
                               : "No tags"}
                           </div>
                         </td>
-                        <td className="px-5 py-5 text-sm bg-white border-b border-gray-200 space-x-5">
+                        <td className="px-5 py-5 text-sm flex items-center bg-white border-b border-gray-200 space-x-5">
                           <button
                             disabled={isLoadingDeletePost}
                             type="button"

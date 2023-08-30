@@ -285,26 +285,26 @@ const Categories = () => {
                 <div className="p-4 flex justify-between">
                     <h1 className="text-3xl">Categories</h1>
 
-                    <div className="justify-center md:flex-col items-end p-4 ">
+                    <div className="justify-center md:mt-4 md:flex items-end p-4 ">
 
-                        <label className="mb-2 font-semibold mx-2">Search Category:</label>
+                        <label className="mb-2 mt-2 font-semibold mx-2">Search Category:</label>
 
                         <input
                             type="text"
                             placeholder="Search category"
-                            className="w-32 p-2 border border-gray-300 rounded mx-2"
+                            className="w-32 mt-2 p-2 border border-gray-300 rounded mx-2"
                             value={searchKeyword}
                             onChange={handleSearchKeywordChange}
                         />
                         <button
-                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                            className="px-4 py-2 mt-2 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
                             onClick={getCategories}
                         >
                             Search
                         </button>
                         <button
                             onClick={handleCreate}
-                            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+                            className="bg-blue-500 mt-2 hover:bg-blue-600 text-white font-semibold py-2 px-4 mx-2 rounded"
                         >
                             Create
                         </button>
