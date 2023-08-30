@@ -36,6 +36,7 @@ const ArticleDetailPage = () => {
     queryFn: () => getAllPosts(),
     queryKey: ["posts"],
   });
+  console.log(data)
   return (
     <MainLayout>
       {isLoading ? (
@@ -94,12 +95,12 @@ const ArticleDetailPage = () => {
               })
             }
             <div>
-            <CommentsContainer
-              comments={data?.comments}
-              className="mt-8"
-              logginedUserId={userState?.userInfo?._id}
-              postSlug={slug}
-            />
+              <CommentsContainer
+                comments={data?.comments}
+                className="mt-8"
+                logginedUserId={userState?.userInfo?._id}
+                postSlug={slug}
+              />
             </div>
           </article> : <ArticleDetailSkeleton />
           }
