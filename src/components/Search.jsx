@@ -6,7 +6,6 @@ const Search = ({ search }) => {
     const [value, setValue] = useState('*')
     const [clicled, setClicked] = useState(null)
 
-    console.log(value, clicled)
 
     return (
         <section className="container justify-center mx-auto flex flex-col px-5 py-5 lg:flex-row">

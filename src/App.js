@@ -15,14 +15,50 @@ import ManagePosts from "./pages/admin/screens/posts/ManagePosts";
 import EditPost from "./pages/admin/screens/posts/EditPost";
 import BlogPage from "./pages/home/BlogPage";
 import Users from "./pages/admin/screens/Users";
+import { toast } from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function App() {
+  const userState = useSelector((state) => state.user);
+
+  const [data, setData] = useState([]);
+  const getCategories = async () => {
+    try {
+      const url = "/api/cat/allcategories"; // Replace with your actual URL
+      const token = userState.userInfo.token;
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+      const postData = {};
+
+      const response = await axios.post(url, postData, { headers });
+      if (response.status === 200) {
+        setData(response.data.categories);
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
+      if (error.response && error.response.data.message)
+        throw new Error(error.response.data.message);
+
+      throw new Error(error.message);
+    }
+  };
+  useEffect(() => {
+    getCategories();
+  }, []);
   return (
     <div className="App font-opensans">
       <Routes>
-        <Route index path="/" element={<HomePage />} />
-        <Route path="/blog/:slug" element={<BlogDetailPage />} />
-        <Route path="/blogs" element={<BlogPage />} />
+        <Route index path="/" element={<HomePage categories={data} />} />
+        <Route
+          path="/blog/:slug"
+          element={<BlogDetailPage categories={data} />}
+        />
+        <Route path="/blogs" element={<BlogPage categories={data} />} />
 
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />

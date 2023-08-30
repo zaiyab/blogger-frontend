@@ -14,12 +14,11 @@ import ErrorMessage from "../../components/ErrorMessage";
 import { useSelector } from "react-redux";
 import Editor from "../../components/editor/Editor";
 
-const BlogDetailPage = () => {
+const BlogDetailPage = (categories) => {
   const { slug } = useParams();
   const userState = useSelector((state) => state.user);
   const [breadCrumbsData, setbreadCrumbsData] = useState([]);
   // const [body, setBody] = useState(null);
-
   const { data, isLoading, isError } = useQuery({
     queryFn: () => getSinglePost({ slug }),
     queryKey: ["blog", slug],
@@ -37,7 +36,7 @@ const BlogDetailPage = () => {
     queryKey: ["posts"],
   });
   return (
-    <MainLayout>
+    <MainLayout categories={categories}>
       {isLoading ? (
         <ArticleDetailSkeleton />
       ) : isError ? (

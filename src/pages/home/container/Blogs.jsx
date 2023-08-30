@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import BlogCard from "../../../components/BlogCard";
 import { useQuery } from "@tanstack/react-query";
@@ -9,6 +9,9 @@ import ErrorMessage from "../../../components/ErrorMessage";
 
 const Blogs = ({ searchKeyword = '', page = 1, limit = 12, setProgress, category }) => {
   setProgress(40)
+
+
+
   const { data, isLoading, isError } = useQuery({
 
     queryFn: () => getAllPosts(searchKeyword, page, limit, category),
@@ -18,7 +21,6 @@ const Blogs = ({ searchKeyword = '', page = 1, limit = 12, setProgress, category
     },
   });
   setProgress(100)
-
 
   return (
     <>

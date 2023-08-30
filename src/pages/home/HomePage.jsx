@@ -10,7 +10,7 @@ import LoadingBar from 'react-top-loading-bar';
 
 import { useState } from "react";
 
-const HomePage = () => {
+const HomePage = (categories) => {
   const [progress, setProgress] = useState(0)
 
   const [searchKeyword, setSearchKeyword] = useState()
@@ -18,7 +18,7 @@ const HomePage = () => {
     setSearchKeyword(value)
   }
   return (
-    <MainLayout>
+    <MainLayout categories={categories}>
       <LoadingBar
         color='#007bff'
         progress={progress}

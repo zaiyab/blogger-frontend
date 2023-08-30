@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import MainLayout from "../../components/MainLayout";
 
@@ -10,7 +10,7 @@ import Blogs from "./container/Blogs";
 import { useLocation } from "react-router-dom";
 
 
-const BlogPage = () => {
+const BlogPage = (categories) => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const [category, setCategory] = useState(queryParams.get("category"))
@@ -20,8 +20,14 @@ const BlogPage = () => {
     const search = (value) => {
         setSearchKeyword(value)
     }
+    const [key, setKey] = useState(0);
+    useEffect(() => {
+        setCategory(queryParams.get("category"))
+
+
+    }, [location])
     return (
-        <MainLayout>
+        <MainLayout categories={categories}>
             <LoadingBar
                 color='#007bff'
                 progress={progress}
@@ -29,7 +35,7 @@ const BlogPage = () => {
             />
             <div className="flex flex-col items-center  ">
                 <Search search={search} />
-                <Blogs category={category ? category : ''} searchKeyword={searchKeyword} key={searchKeyword} setProgress={setProgress} />
+                <Blogs key={category + searchKeyword} category={category ? category : ''} searchKeyword={searchKeyword} setProgress={setProgress} />
             </div>
         </MainLayout>
     );
