@@ -20,7 +20,6 @@ const BlogPage = (categories) => {
     const search = (value) => {
         setSearchKeyword(value)
     }
-    const [key, setKey] = useState(0);
     useEffect(() => {
         setCategory(queryParams.get("category"))
 

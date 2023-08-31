@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { getSinglePost, updatePost } from "../../../../services/index/posts";
 import { Link, useParams } from "react-router-dom";
 import BlogDetailSkeleton from "../../../blogDetail/components/BlogDetailSkeleton";
 import ErrorMessage from "../../../../components/ErrorMessage";
-import parseJsonToHtml from "../../../../utils/parseJsonToHtml";
+// import parseJsonToHtml from "../../../../utils/parseJsonToHtml";
 import { stables } from "../../../../constants";
 import { HiOutlineCamera } from "react-icons/hi";
 import { toast } from "react-hot-toast";
@@ -45,15 +45,24 @@ const EditPost = () => {
       toast.error(error.message);
     },
   });
-
+  const [tags, setTags] = useState('')
+  const [tagsArray, setTagsArray] = useState([])
+  const handleTags = (v) => {
+    setTags(v.target.value)
+    setTagsArray(v.target.value.split(','));
+  }
   useEffect(() => {
     if (!isLoading && !isError) {
       setInitialPhoto(data?.photo);
     }
     data?.links ? setLinks(data.links) : setLinks(links)
+    data?.tags ? setTags(data.tags.map((t) => t)) : setTags('')
+    data?.tags ? setTagsArray(data.tags) : setTags('')
+
 
   }, [data, isError, isLoading]);
 
+  // useLayoutEffect(() => { setTagsArray(tags.split(' ')) }, [tags])
   const handleChange = (index, field, value) => {
     const newLinks = [...links];
     newLinks[index][field] = value;
@@ -86,7 +95,7 @@ const EditPost = () => {
     }
     updatedData.append("document", JSON.stringify({ body }));
     updatedData.append("links", JSON.stringify(links));
-
+    updatedData.append("tags", JSON.stringify(tagsArray))
 
     mutateUpdatePostDetail({
       updatedData,
@@ -101,6 +110,8 @@ const EditPost = () => {
       setPhoto(null);
     }
   };
+
+
 
   return (
     <div className="flex flex-col">
@@ -168,6 +179,7 @@ const EditPost = () => {
               )}
             </div>
             <div className="editor mx-auto w-full flex flex-col text-gray-800 border border-gray-300 p-4 shadow-lg ">
+              <textarea value={tags} onChange={handleTags} className="description bg-gray-100 sec p-3 h-24 border border-gray-300 outline-none" spellcheck="false" placeholder="Enter tags seperated by Comma"></textarea>
 
               {links.map((link, index) => (
                 <>

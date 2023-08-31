@@ -25,7 +25,7 @@ const Categories = () => {
             setProgress(40)
 
             const postData = {
-                limit: 15,
+                limit: 10,
                 page: currentPage,
                 searchKeyword: searchKeyword,
             };
@@ -181,11 +181,11 @@ const Categories = () => {
                         setProgress(100)
                         setCategories(prevCategories => [...prevCategories, response.data]);
 
-                        toast.success("Updated to  " + response.data.name)
+                        toast.success("Added  " + response.data.name)
 
                         Swal.fire(
-                            'Update!',
-                            'category has been update.',
+                            'Created!',
+                            'category has been Created.',
                             'success'
                         )
                     }
@@ -273,7 +273,7 @@ const Categories = () => {
     }
     useEffect(() => {
         getCategories()
-    }, [])
+    }, [currentPage])
     return (
         <>
             <LoadingBar

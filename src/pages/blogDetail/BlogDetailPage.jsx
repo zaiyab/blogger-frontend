@@ -85,7 +85,7 @@ const BlogDetailPage = (categories) => {
 
                   <div key={e.title} className="flex flex-col  py-2 mt-5">
                     <h1 className="md:text-4xl mb-4 font-roboto text-dark-hard text-xl">{e.title}</h1>
-                    <div className={`w-full  h-[400px]`} dangerouslySetInnerHTML={{ __html: e.code }} />
+                    <div className={`w-full  ${e.title ? "h-[400px]" : ''}`} dangerouslySetInnerHTML={{ __html: e.code }} />
                   </div>
 
 

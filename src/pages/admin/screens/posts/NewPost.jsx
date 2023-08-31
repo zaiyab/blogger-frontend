@@ -11,6 +11,7 @@ const NewPost = () => {
   const [progress, setProgress] = useState(0)
   const [links, setLinks] = useState([{ title: "", code: '' }, { title: "", code: '' }, { title: "", code: '' }])
   const [title, setTitle] = useState();
+  const [slug, setSlug] = useState()
   const handletitle = (v) => {
     setTitle(v.target.value)
   }
@@ -23,18 +24,29 @@ const NewPost = () => {
     newLinks[index][field] = value;
     setLinks(newLinks);
   };
+  const handleSlug = (v) => {
+    setSlug(v.target.value.replace(/\s+/g, '-'))
+  }
+  const [tags, setTags] = useState()
+  const [tagsArray, setTagsArray] = useState()
+  const handleTags = (v) => {
+    setTags(v.target.value)
+    setTagsArray(v.target.value.split(','));
+  }
   const handleclear = () => {
     setTitle("");
     setDesc('');
+    setSlug('')
+    setTags('')
+    setTagsArray([])
 
- 
 
   }
   const handlesubmit = async (e) => {
     e.preventDefault();
     try {
-      if (!title || !desc || !selectedCategory) {
-        toast.error(`Title description and category are required.`);
+      if (!title || !desc || !selectedCategory || !slug) {
+        toast.error(`Title description category and slug are required.`);
         return;
       }
 
@@ -50,7 +62,10 @@ const NewPost = () => {
         title: title,
         caption: desc,
         links: links,
-        category: selectedCategory
+        category: selectedCategory,
+        slug: slug,
+        tags: tagsArray
+
       };
 
       const response = await axios.post(url, postData, { headers });
@@ -146,13 +161,17 @@ const NewPost = () => {
               )) : ""}
             </select>
             <input value={title} onChange={handletitle} className="title bg-gray-100 border border-gray-300 p-2 mb-4 outline-none" spellcheck="false" placeholder="Title" type="text" />
-            <textarea value={desc} onChange={handledesc} className="description bg-gray-100 sec p-3 h-60 border border-gray-300 outline-none" spellcheck="false" placeholder="Describe everything about this post here"></textarea>
+            <input value={slug} onChange={handleSlug} className="title bg-gray-100 border border-gray-300 p-2 mb-4 outline-none" spellcheck="false" placeholder="Slug" type="text" />
+
+            <textarea value={desc} onChange={handledesc} className="description bg-gray-100 sec p-3 h-60 border border-gray-300 mb-4 outline-none" spellcheck="false" placeholder="Describe everything about this post here"></textarea>
+            <textarea value={tags} onChange={handleTags} className="description bg-gray-100 sec p-3 h-24 border border-gray-300 outline-none" spellcheck="false" placeholder="Enter tags seperated by comma"></textarea>
 
 
             {links.map((link, index) => (
               <>
                 <div className='flex flex-col' key={index}>
                   <h1 className='font-bold font-roboto text-center mt-2'>Link {index + 1}</h1>
+
                   <input
                     className="title bg-gray-100 border border-gray-300 p-2 mb-4 outline-none"
                     spellCheck="false"
