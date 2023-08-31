@@ -28,7 +28,7 @@ function App() {
   const getCategories = async () => {
     try {
       const url = "/api/cat/allcategories"; // Replace with your actual URL
-      const token = userState.userInfo.token;
+      const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZWI2NDBlZjFmZTQyNjNiOTIzY2UwYSIsImlhdCI6MTY5MzM0MzQ4NywiZXhwIjoxNjk1OTM1NDg3fQ.BMiX8bALMZNkVTpmWWaFWTk0a1wkQiWkzwpdHvU2RfU";
 
       const headers = {
         Authorization: `Bearer ${token}`,
