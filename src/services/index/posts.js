@@ -4,11 +4,12 @@ export const getAllPosts = async (
   searchKeyword = "",
   page = 1,
   limit = 12,
-  category = ""
+  category = "",
+  tag = ""
 ) => {
   try {
     const { data, headers } = await axios.get(
-      `/api/posts?searchKeyword=${searchKeyword}&page=${page}&limit=${limit}&category=${category}`
+      `/api/posts?searchKeyword=${searchKeyword}&page=${page}&limit=${limit}&category=${category}&tag=${tag}`
     );
     return { data, headers };
   } catch (error) {

@@ -20,11 +20,13 @@ const BlogPage = (categories) => {
     const search = (value) => {
         setSearchKeyword(value)
     }
+    const [tag, setTag] = useState(queryParams.get("tag"))
     useEffect(() => {
         setCategory(queryParams.get("category"))
-
+        setTag(queryParams.get("tag"))
 
     }, [location])
+    console.log("object" + tag)
     return (
         <MainLayout categories={categories}>
             <LoadingBar
@@ -34,7 +36,7 @@ const BlogPage = (categories) => {
             />
             <div className="flex flex-col items-center  ">
                 <Search search={search} />
-                <Blogs key={category + searchKeyword} category={category ? category : ''} searchKeyword={searchKeyword} setProgress={setProgress} />
+                <Blogs key={category + searchKeyword + tag} tag={tag ? tag : ""} category={category ? category : ''} searchKeyword={searchKeyword} setProgress={setProgress} />
             </div>
         </MainLayout>
     );

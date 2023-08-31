@@ -46,7 +46,7 @@ const EditPost = () => {
     },
   });
   const [tags, setTags] = useState('')
-  const [tagsArray, setTagsArray] = useState([])
+  const [tagsArray, setTagsArray] = useState()
   const handleTags = (v) => {
     setTags(v.target.value)
     setTagsArray(v.target.value.split(','));
@@ -57,7 +57,7 @@ const EditPost = () => {
     }
     data?.links ? setLinks(data.links) : setLinks(links)
     data?.tags ? setTags(data.tags.map((t) => t)) : setTags('')
-    data?.tags ? setTagsArray(data.tags) : setTags('')
+    data?.tags ? setTagsArray(data.tags) : setTagsArray(null)
 
 
   }, [data, isError, isLoading]);
@@ -76,7 +76,11 @@ const EditPost = () => {
   const handleUpdatePost = async () => {
     let updatedData = new FormData();
 
-
+    if (tagsArray[0] === "") {
+      toast.error(`Atleast 1 tag is required.`);
+      return;
+    }
+    console.log(tagsArray)
     if (!initialPhoto && photo) {
       updatedData.append("postPicture", photo);
 

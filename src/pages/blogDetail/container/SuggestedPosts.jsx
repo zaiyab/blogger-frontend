@@ -52,7 +52,7 @@ const SuggestedPosts = ({ className, header, posts = [], tags }) => {
           {tags.map((item, index) => (
             <Link
               key={index}
-              to="/"
+              to={`/blog?tag=${item}`}
               className="inline-block rounded-md px-3 py-1.5 bg-primary font-roboto text-xs text-white md:text-sm"
             >
               {item}

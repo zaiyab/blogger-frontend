@@ -88,7 +88,7 @@ const ManagePosts = () => {
 
 
 
-  
+
   };
 
   const handleActiveToggle = async (state, id) => {
@@ -257,12 +257,13 @@ const ManagePosts = () => {
                           </p>
                         </td>
                         <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                          <div className="flex gap-x-2">
+                          <div className={`flex gap-x-2 ${post.tags.length > 3 ? "flex-col" : ''}`}>
                             {post.tags.length > 0
                               ? post.tags.map((tag, index) => (
                                 <p>
                                   {tag}
                                   {post.tags.length - 1 !== index && ","}
+
                                 </p>
                               ))
                               : "No tags"}
@@ -270,47 +271,47 @@ const ManagePosts = () => {
                         </td>
                         <td className=" text-sm  bg-white border-b border-gray-200 ">
                           <div className="flex items-center  space-x-3 mx-3">
-                          <button
-                            disabled={isLoadingDeletePost}
-                            type="button"
-                            className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
-                            onClick={() => {
-                              deletePostHandler({
-                                slug: post?.slug,
-                                token: userState.userInfo.token,
-                              });
-                            }}
-                          >
-                            Delete
-                          </button>
-                          <Link
-                            to={`/admin/posts/manage/edit/${post?.slug}`}
-                            className="text-green-600 hover:text-green-900"
-                          >
-                            Edit
-                          </Link>
-                          <Link
-                            to={`/admin/comments/${post?._id}`}
-                            className="text-green-600 hover:text-green-900"
-                          >
-                            View Comments
-                          </Link>
-                          {post.active ? (
                             <button
-                              className="text-green-600"
-                              onClick={() => handleActiveToggle(false, post._id)}
+                              disabled={isLoadingDeletePost}
+                              type="button"
+                              className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
+                              onClick={() => {
+                                deletePostHandler({
+                                  slug: post?.slug,
+                                  token: userState.userInfo.token,
+                                });
+                              }}
                             >
-                              Verified
+                              Delete
                             </button>
-                          ) : (
-                            <button
-                              className="text-red-600"
-                              onClick={() => handleActiveToggle(true, post._id)}
+                            <Link
+                              to={`/admin/posts/manage/edit/${post?.slug}`}
+                              className="text-green-600 hover:text-green-900"
                             >
-                              Not Verified
-                            </button>
-                          )}
-</div>
+                              Edit
+                            </Link>
+                            <Link
+                              to={`/admin/comments/${post?._id}`}
+                              className="text-green-600 hover:text-green-900"
+                            >
+                              View Comments
+                            </Link>
+                            {post.active ? (
+                              <button
+                                className="text-green-600"
+                                onClick={() => handleActiveToggle(false, post._id)}
+                              >
+                                Visible
+                              </button>
+                            ) : (
+                              <button
+                                className="text-red-600"
+                                onClick={() => handleActiveToggle(true, post._id)}
+                              >
+                                Hidden
+                              </button>
+                            )}
+                          </div>
                         </td>
 
                       </tr>
