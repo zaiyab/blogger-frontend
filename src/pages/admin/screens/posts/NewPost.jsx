@@ -26,12 +26,15 @@ const NewPost = () => {
   const handleclear = () => {
     setTitle("");
     setDesc('');
+
+ 
+
   }
   const handlesubmit = async (e) => {
     e.preventDefault();
     try {
-      if (!title || !desc) {
-        toast.error("Title and description are required.");
+      if (!title || !desc || !selectedCategory) {
+        toast.error(`Title description and category are required.`);
         return;
       }
 
@@ -55,6 +58,7 @@ const NewPost = () => {
 
       if (response.status === 200) {
         toast.success("Post is added");
+        handleclear()
       }
       setProgress(100)
 

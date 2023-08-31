@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { useEffect } from 'react';
-
+import Swal from 'sweetalert2';
 
 
 const Comments = () => {
@@ -48,6 +48,19 @@ const Comments = () => {
   }
 
   const onDelete = async (id) => {
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then(async(result) => {
+      if (result.isConfirmed) {
+
+        
     try {
       const url = '/api/comments/delcomments'; // Replace with your actual URL
       const token = userState.userInfo.token;
@@ -67,6 +80,11 @@ const Comments = () => {
         const updatedComments = comments.filter(comment => comment._id !== id);
 
         setComments(updatedComments);
+        Swal.fire(
+          'Deleted!',
+          response.data.desc+' has been deleted.',
+          'success'
+        )
         toast.success("Deleted Comment")
       }
 
@@ -79,6 +97,10 @@ const Comments = () => {
       throw new Error(error.message);
 
     }
+
+      
+      }
+    })
 
 
   }

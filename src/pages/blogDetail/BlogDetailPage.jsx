@@ -25,7 +25,7 @@ const BlogDetailPage = (categories) => {
     onSuccess: (data) => {
       setbreadCrumbsData([
         { name: "Home", link: "/" },
-        { name: "Blogs", link: "/blogs" },
+        { name: "Blog", link: "/blog" },
         { name: data.title, link: `/blog/${data.slug}` },
       ]);
       // setBody(parseJsonToHtml(data?.body));
@@ -57,7 +57,7 @@ const BlogDetailPage = (categories) => {
             <div className="mt-4 flex gap-2">
               {data?.categories.map((category) => (
                 <Link
-                  to={`/blogs?category=${category._id}`}
+                  to={`/blog?category=${category._id}`}
                   className="text-primary text-sm font-roboto inline-block md:text-base"
                 >
                   {category.name}
@@ -107,7 +107,7 @@ const BlogDetailPage = (categories) => {
               header="Latest Article"
               posts={postsData?.data}
               tags={data?.tags}
-              className="mt-8 lg:mt-0 lg:max-w-xs"
+              className="mt-10  lg:max-w-xs"
             />
             <div className="mt-7">
               <h2 className="font-roboto font-medium text-dark-hard mb-4 md:text-xl">

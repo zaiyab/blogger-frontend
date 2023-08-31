@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import LoadingBar from 'react-top-loading-bar';
 import Pagination from '../../../components/Pagination';
-
+import Swal from 'sweetalert2';
 
 const Users = () => {
 
@@ -73,45 +73,69 @@ const Users = () => {
 
 
     const handleDelete = async (id) => {
-        try {
-            setProgress(20)
-            const url = '/api/users/deleteusers'; // Replace with your actual URL
-            const token = userState.userInfo.token;
 
-            const headers = {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            };
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then(async(result) => {
+            if (result.isConfirmed) {
 
-            const postData = {
-                id: id,
+                try {
+                    setProgress(20)
+                    const url = '/api/users/deleteusers'; // Replace with your actual URL
+                    const token = userState.userInfo.token;
+        
+                    const headers = {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    };
+        
+                    const postData = {
+                        id: id,
+        
+        
+                    };
+        
+                    const response = await axios.post(url, postData, { headers });
+                    setProgress(70)
+        
+                    if (response.status === 200) {
+        
+                        const updatedUsers = users.filter(user => user._id !== response.data._id);
+                        setUsers(updatedUsers);
+                        Swal.fire(
+                            'Deleted!',
+                            response.data.name+' has been deleted.',
+                            'success'
+                          )
+                        toast.success("Deleted User")
+                    }
+                    setProgress(100)
+        
+                } catch (error) {
+                    toast.error("Something went wrong");
+                    setProgress(100)
+        
+                    if (error.response && error.response.data.message)
+                        throw new Error(error.response.data.message);
+        
+        
+                    throw new Error(error.message);
+        
+                }
+        
 
 
-            };
-
-            const response = await axios.post(url, postData, { headers });
-            setProgress(70)
-
-            if (response.status === 200) {
-
-                const updatedUsers = users.filter(user => user._id !== response.data._id);
-                setUsers(updatedUsers);
-                toast.success("Deleted User")
+         
             }
-            setProgress(100)
+          })
 
-        } catch (error) {
-            toast.error("Something went wrong");
-            setProgress(100)
-
-            if (error.response && error.response.data.message)
-                throw new Error(error.response.data.message);
-
-
-            throw new Error(error.message);
-
-        }
-
+   
     };
 
 

@@ -59,7 +59,7 @@ function App() {
           path="/blog/:slug"
           element={<BlogDetailPage categories={data} />}
         />
-        <Route path="/blogs" element={<BlogPage categories={data} />} />
+        <Route path="/blog" element={<BlogPage categories={data} />} />
 
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />

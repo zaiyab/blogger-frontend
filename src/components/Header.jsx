@@ -9,7 +9,7 @@ import { logout } from "../store/actions/user";
 
 const navItemsInfo = [
   { name: "Home", type: "link", href: "/" },
-  { name: "Blogs", type: "link", href: "/blogs" },
+  { name: "Blog", type: "link", href: "/blog" },
   {
     name: "Pages",
     type: "dropdown",
@@ -62,7 +62,7 @@ const NavItem = ({ item, categories }) => {
                 categories.categories.categories.map((cat, index) => (
                   <Link
                     key={index}
-                    to={`/blogs?category=${cat._id}`}
+                    to={`/blog?category=${cat._id}`}
                     className="hover:bg-dark-hard hover:text-white px-4 py-2 text-white lg:text-dark-soft"
                   >
                     {cat.name}

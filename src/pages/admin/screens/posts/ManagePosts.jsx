@@ -7,7 +7,7 @@ import { toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
-
+import Swal from "sweetalert2";
 let isFirstRun = true;
 
 const ManagePosts = () => {
@@ -64,7 +64,31 @@ const ManagePosts = () => {
   };
 
   const deletePostHandler = ({ slug, token }) => {
-    mutateDeletePost({ slug, token });
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+
+        mutateDeletePost({ slug, token });
+        Swal.fire(
+          'Deleted!',
+          'Post has been deleted.',
+          'success'
+        )
+      }
+    })
+
+
+
+
+  
   };
 
   const handleActiveToggle = async (state, id) => {
@@ -244,7 +268,8 @@ const ManagePosts = () => {
                               : "No tags"}
                           </div>
                         </td>
-                        <td className="px-5 py-5 text-sm flex items-center bg-white border-b border-gray-200 space-x-5">
+                        <td className=" text-sm  bg-white border-b border-gray-200 ">
+                          <div className="flex items-center  space-x-3 mx-3">
                           <button
                             disabled={isLoadingDeletePost}
                             type="button"
@@ -285,7 +310,7 @@ const ManagePosts = () => {
                               Not Verified
                             </button>
                           )}
-
+</div>
                         </td>
 
                       </tr>
