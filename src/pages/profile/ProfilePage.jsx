@@ -11,7 +11,7 @@ import { userActions } from "../../store/reducers/userReducers";
 import { toast } from "react-hot-toast";
 import { useMemo } from "react";
 
-const ProfilePage = () => {
+const ProfilePage = (categories) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
@@ -74,7 +74,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <MainLayout>
+    <MainLayout categories={categories}>
       <section className="container mx-auto px-5 py-10">
         <div className="w-full max-w-sm mx-auto">
           <ProfilePicture avatar={profileData?.avatar} />
@@ -100,9 +100,8 @@ const ProfilePage = () => {
                   },
                 })}
                 placeholder="Enter name"
-                className={`placeholder:text-[#959ead] text-dark-hard mt-3 rounded-lg px-5 py-4 font-semibold block outline-none border ${
-                  errors.name ? "border-red-500" : "border-[#c3cad9]"
-                }`}
+                className={`placeholder:text-[#959ead] text-dark-hard mt-3 rounded-lg px-5 py-4 font-semibold block outline-none border ${errors.name ? "border-red-500" : "border-[#c3cad9]"
+                  }`}
               />
               {errors.name?.message && (
                 <p className="text-red-500 text-xs mt-1">
@@ -132,9 +131,8 @@ const ProfilePage = () => {
                   },
                 })}
                 placeholder="Enter email"
-                className={`placeholder:text-[#959ead] text-dark-hard mt-3 rounded-lg px-5 py-4 font-semibold block outline-none border ${
-                  errors.email ? "border-red-500" : "border-[#c3cad9]"
-                }`}
+                className={`placeholder:text-[#959ead] text-dark-hard mt-3 rounded-lg px-5 py-4 font-semibold block outline-none border ${errors.email ? "border-red-500" : "border-[#c3cad9]"
+                  }`}
               />
               {errors.email?.message && (
                 <p className="text-red-500 text-xs mt-1">
@@ -154,9 +152,8 @@ const ProfilePage = () => {
                 id="password"
                 {...register("password")}
                 placeholder="Enter new password"
-                className={`placeholder:text-[#959ead] text-dark-hard mt-3 rounded-lg px-5 py-4 font-semibold block outline-none border ${
-                  errors.password ? "border-red-500" : "border-[#c3cad9]"
-                }`}
+                className={`placeholder:text-[#959ead] text-dark-hard mt-3 rounded-lg px-5 py-4 font-semibold block outline-none border ${errors.password ? "border-red-500" : "border-[#c3cad9]"
+                  }`}
               />
               {errors.password?.message && (
                 <p className="text-red-500 text-xs mt-1">

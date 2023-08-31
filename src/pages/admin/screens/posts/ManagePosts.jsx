@@ -77,11 +77,11 @@ const ManagePosts = () => {
       if (result.isConfirmed) {
 
         mutateDeletePost({ slug, token });
-        Swal.fire(
-          'Deleted!',
-          'Post has been deleted.',
-          'success'
-        )
+        // Swal.fire(
+        //   'Deleted!',
+        //   'Post has been deleted.',
+        //   'success'
+        // )
       }
     })
 

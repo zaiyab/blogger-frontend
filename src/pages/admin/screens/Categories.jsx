@@ -116,11 +116,11 @@ const Categories = () => {
 
                         toast.success("Updated to  " + response.data.name)
 
-                        Swal.fire(
-                            'Update!',
-                            'category has been update.',
-                            'success'
-                        )
+                        // Swal.fire(
+                        //     'Update!',
+                        //     'category has been update.',
+                        //     'success'
+                        // )
                     }
                     setProgress(100)
 
@@ -183,11 +183,11 @@ const Categories = () => {
 
                         toast.success("Added  " + response.data.name)
 
-                        Swal.fire(
-                            'Created!',
-                            'category has been Created.',
-                            'success'
-                        )
+                        // Swal.fire(
+                        //     'Created!',
+                        //     'category has been Created.',
+                        //     'success'
+                        // )
                     }
                     setProgress(100)
 
@@ -248,11 +248,11 @@ const Categories = () => {
                         setCategories(updatedCategories);
                         toast.success("Deleted " + response.data.name)
 
-                        Swal.fire(
-                            'Deleted!',
-                            response.data.name + ' has been deleted.',
-                            'success'
-                        )
+                        // Swal.fire(
+                        //     'Deleted!',
+                        //     response.data.name + ' has been deleted.',
+                        //     'success'
+                        // )
                     }
                     setProgress(100)
 

@@ -110,11 +110,11 @@ const Users = () => {
 
                         const updatedUsers = users.filter(user => user._id !== response.data._id);
                         setUsers(updatedUsers);
-                        Swal.fire(
-                            'Deleted!',
-                            response.data.name + ' has been deleted.',
-                            'success'
-                        )
+                        // Swal.fire(
+                        //     'Deleted!',
+                        //     response.data.name + ' has been deleted.',
+                        //     'success'
+                        // )
                         toast.success("Deleted User")
                     }
                     setProgress(100)

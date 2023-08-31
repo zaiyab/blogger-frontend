@@ -11,14 +11,13 @@ const navItemsInfo = [
   { name: "Home", type: "link", href: "/" },
   { name: "Blog", type: "link", href: "/blog" },
   {
-    name: "Pages",
+    name: "Categories",
     type: "dropdown",
     items: [
-      { title: "About us", href: "/about" },
-      { title: "Contact us", href: "/contact" },
+      { title: "", href: "/" },
+      { title: "", href: "/" },
     ],
   },
-  { name: "Pricing", type: "link", href: "/pricing" },
   { name: "Faq", type: "link", href: "/faq" },
 ];
 

@@ -9,7 +9,7 @@ import MainLayout from "../../components/MainLayout";
 import { login } from "../../services/index/users";
 import { userActions } from "../../store/reducers/userReducers";
 
-const LoginPage = () => {
+const LoginPage = (categories) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userState = useSelector((state) => state.user);
@@ -52,7 +52,7 @@ const LoginPage = () => {
   };
 
   return (
-    <MainLayout>
+    <MainLayout categories={categories}>
       <section className="container mx-auto px-5 py-10">
         <div className="w-full max-w-sm mx-auto">
           <h1 className="font-roboto text-2xl font-bold text-center text-dark-hard mb-8">
@@ -81,9 +81,8 @@ const LoginPage = () => {
                   },
                 })}
                 placeholder="Enter email"
-                className={`placeholder:text-[#959ead] text-dark-hard mt-3 rounded-lg px-5 py-4 font-semibold block outline-none border ${
-                  errors.email ? "border-red-500" : "border-[#c3cad9]"
-                }`}
+                className={`placeholder:text-[#959ead] text-dark-hard mt-3 rounded-lg px-5 py-4 font-semibold block outline-none border ${errors.email ? "border-red-500" : "border-[#c3cad9]"
+                  }`}
               />
               {errors.email?.message && (
                 <p className="text-red-500 text-xs mt-1">
@@ -112,9 +111,8 @@ const LoginPage = () => {
                   },
                 })}
                 placeholder="Enter password"
-                className={`placeholder:text-[#959ead] text-dark-hard mt-3 rounded-lg px-5 py-4 font-semibold block outline-none border ${
-                  errors.password ? "border-red-500" : "border-[#c3cad9]"
-                }`}
+                className={`placeholder:text-[#959ead] text-dark-hard mt-3 rounded-lg px-5 py-4 font-semibold block outline-none border ${errors.password ? "border-red-500" : "border-[#c3cad9]"
+                  }`}
               />
               {errors.password?.message && (
                 <p className="text-red-500 text-xs mt-1">

@@ -61,9 +61,9 @@ function App() {
         />
         <Route path="/blog" element={<BlogPage categories={data} />} />
 
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/register" element={<RegisterPage categories={data} />} />
+        <Route path="/login" element={<LoginPage categories={data} />} />
+        <Route path="/profile" element={<ProfilePage categories={data} />} />
 
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Admin />} />
