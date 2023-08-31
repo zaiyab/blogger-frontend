@@ -2,7 +2,7 @@
   "name": "frontend-blog-app",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://13.48.104.112:5000",
+  "proxy": "http://13.48.104.112:5000",
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.3",
     "@tanstack/react-query": "^4.28.0",
